@@ -2,7 +2,7 @@
 "功能插件设置
 "============
 "COC设置
-source ~/.config/nvim/plug/coc/coc_config.vim
+source ~/.config/nvim/core/coc/coc_config.vim
 
 "floaterm设置
 hi Floaterm guibg=black
