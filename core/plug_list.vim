@@ -8,49 +8,139 @@ autocmd VimEnter *
 
 call plug#begin('~/.config/nvim/plugged')
 "在这里添加插件
-"eg：Plug 'user/repository'
+
+"代码开发,动态更新gtags,ale检查错误,显示函数参数
+"Plug 'ludovicchabant/vim-gutentags'
+"Plug 'w0rp/ale'
+Plug 'mbbill/echofunc'
+Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 
 "美化插件
 Plug 'glepnir/galaxyline.nvim'
-Plug 'hardcoreplayers/vim-buffet'
-Plug 'kyazdani42/nvim-web-devicons'
+Plug 'bagrat/vim-buffet'
+Plug 'ryanoasis/vim-devicons'
 Plug 'hardcoreplayers/dashboard-nvim'
-Plug 'Yggdroot/indentLine',{ 'for': ['lua', 'c', 'h', 'cpp', 'py', 'json', 'go', 'java', 'vim', 'hs'] }
+Plug 'nathanaelkane/vim-indent-guides'
+
 "主题插件
 Plug 'kristijanhusak/vim-hybrid-material'
 Plug 'hardcoreplayers/oceanic-material'
 Plug 'mhartington/oceanic-next'
+
 "功能插件
-" Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary!' }
-Plug 'tenfyzhong/CompleteParameter.vim',{'for':['lua', 'c', 'h', 'cpp', 'py', 'go', 'java', 'vim', 'json', 'hs']}
-Plug 'metalelf0/supertab'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'junegunn/vim-easy-align', {'on':'<Plug>(EasyAlign)'}
 Plug 'voldikss/vim-translator', { 'on':'<Plug>Translate' }
-Plug 'rhysd/accelerated-jk', {'on':['<Plug>(accelerated_jk_gj)' , '<Plug>(accelerated_jk_gk)']}
-Plug 'tyru/open-browser.vim', {'on':['<Plug>(openbrowser-smart-search)', '<Plug>(openbrowser-open)']}
-Plug 'easymotion/vim-easymotion'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'chrisbra/changesPlugin'
-Plug 'liuchengxu/vista.vim', {'on':'Vista'}
-Plug 'kristijanhusak/defx-git', {'on':'Defx'}
-Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins'}
-Plug 'kristijanhusak/defx-icons'
-Plug 'voldikss/vim-floaterm', { 'on': 'FloatermNew' }
-Plug 'kevinhwang91/rnvimr', {'on': 'RnvimrToggle'}
-Plug 'sbdchd/neoformat', {'on':'Neoformat'}
-Plug 'honza/vim-snippets',{ 'for': ['lua', 'c', 'h', 'cpp', 'py', 'json', 'go', 'java', 'vim', 'hs'] }
-Plug 'dhruvasagar/vim-table-mode', { 'for': 'markdown' }
-Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-Plug 'junegunn/fzf', {'on':['Files', 'History', 'Colors', 'Rg', 'Marks'] }
-Plug 'junegunn/fzf.vim', {'on':['Files', 'History', 'Colors', 'Rg', 'Marks']}
-Plug 'scrooloose/nerdcommenter'
 Plug 'neoclide/coc.nvim',{'branch':'release'}
 
+Plug 'mbbill/undotree'
+Plug 'tpope/vim-surround'
+Plug 'gcmt/wildfire.vim'
+Plug 'liuchengxu/vim-which-key'
+
+Plug 'airblade/vim-gitgutter'
+
+"ranger插件
+Plug 'kevinhwang91/rnvimr', {'on': 'RnvimrToggle'}
+"fzf相关
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim',
+
+"置显示当前文件的函数和变量list
+Plug 'liuchengxu/vista.vim', {'on':'Vista'}
+
+"代码注释,需要研究
+Plug 'scrooloose/nerdcommenter'
+
+"可能要删除,neoformat需要调整
+Plug 'sbdchd/neoformat', {'on':'Neoformat'}
+
+"高亮多个单词
+Plug 'lfv89/vim-interestingwords'
+
+"nvim下使用tig
+Plug 'iberianpig/tig-explorer.vim'
+Plug 'rbgrouleff/bclose.vim'
+
+"markdown专用,暂时不装
+"Plug 'dhruvasagar/vim-table-mode', { 'for': 'markdown' }
+"Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
+
+"Plug 'tyru/open-browser.vim', {'on':['<Plug>(openbrowser-smart-search)', '<Plug>(openbrowser-open)']}
 call plug#end()
 
 
+"airblade/vim-gitgutter
+" let g:gitgutter_signs = 0
+let g:gitgutter_sign_allow_clobber = 0
+let g:gitgutter_map_keys = 0
+let g:gitgutter_override_sign_column_highlight = 0
+let g:gitgutter_preview_win_floating = 1
+let g:gitgutter_sign_added = '▎'
+let g:gitgutter_sign_modified = '░'
+let g:gitgutter_sign_removed = '▏'
+let g:gitgutter_sign_removed_first_line = '▔'
+let g:gitgutter_sign_modified_removed = '▒'
+" autocmd BufWritePost * GitGutter
+"nnoremap <LEADER>gf :GitGutterFold<CR>
+nnoremap h :GitGutterPreviewHunk<CR>
+nnoremap <LEADER>gp :GitGutterPrevHunk<CR>
+nnoremap <LEADER>gn :GitGutterNextHunk<CR>
+nnoremap <LEADER>gl :GitGutterLineHighlightsToggle<CR>
+
+"lazygit,tig
+noremap <LEADER>gg :tabe<CR>:-tabmove<CR>:term lazygit<CR>
+
+"noremap <LEADER>gt :tabe<CR>:-tabmove<CR>:term tig<CR>
+nnoremap <Leader>gt :TigOpenProjectRootDir<CR>
+nnoremap <Leader>gT :TigOpenCurrentFile<CR>
+nnoremap <Leader>gb :TigBlame<CR>
+nnoremap <Leader>gf :<C-u>:TigGrep<Space><C-R><C-W><CR>
+
+"=============代码开发所需要的工具配置===========
+" ===========gutentags=============
+" 搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归
+"let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project', '.gitignore']
+
+"判断是否是linux kernel目录,若是ctags查找的目录为find_list
+"if isdirectory("kernel/") && isdirectory("mm/")
+"	let g:gutentags_file_list_command = 'find arch/arm/ mm/ kernel/ include/ init/ lib/'
+"endif
+
+" 添加ctags额外参数，会让tags文件变大
+" let g:gutentags_ctags_extra_args = ['--fields=+lS']
+" let g:gutentags_ctags_extra_args = ['--fields=+niazlS', '--extra=+q']
+" let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
+" let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+
+" ======ALE静态语法检测========
+"let g:ale_sign_column_always = 1
+"let g:ale_sign_error = '✗'
+"let g:ale_sign_warning = 'w'
+"let g:ale_statusline_format = ['✗ %d', '⚡ %d', '✔ OK']
+"let g:ale_echo_msg_format = '[%linter%] %code: %%s'
+"let g:ale_lint_on_text_changed = 'normal'
+"let g:ale_lint_on_insert_leave = 1
+""let g:airline#extensions#ale#enabled = 1
+"let g:ale_c_gcc_options = '-Wall -O2 -std=c99'
+"let g:ale_cpp_gcc_options = '-Wall -O2 -std=c++14'
+"let g:ale_c_cppcheck_options = ''
+"let g:ale_cpp_cppcheck_options = ''
+
+" global:建立数据库
+"if filereadable("GTAGS")
+"	set cscopetag
+"	set cscopeprg=gtags-cscope
+"	cs add GTAGS
+"	au BufWritePost *.c,*.cpp,*.h silent! !global -u &
+"endif
+
+"  自动加载ctags: ctags -R
+"if filereadable("tags")
+"	set tags=tags
+"endif
 
 "============
 "功能插件设置
@@ -58,89 +148,50 @@ call plug#end()
 "COC设置
 source ~/.config/nvim/core/coc_config.vim
 
-"floaterm设置
-hi Floaterm guibg=black
-hi FloatermBorder guibg=none guifg=cyan
-let g:floaterm_position = 'center'
-let g:floaterm_wintype = 'floating'
-noremap <LEADER>ftn :FloatermNew<CR>
-noremap <LEADER>ftk :FloatermKill<CR>
-
-"OpenBrowser设置
-let g:netrw_nogx = 1
-nmap gx <Plug>(openbrowser-smart-search)
-vmap gx <Plug>(openbrowser-smart-search)
-nmap gu <Plug>(openbrowser-open)
-vmap gu <Plug>(openbrowser-open)
-
-" CompleteParameter设置
-inoremap <silent><expr> ( complete_parameter#pre_complete("()")
-smap <c-j> <Plug>(complete_parameter#goto_next_parameter)
-imap <c-j> <Plug>(complete_parameter#goto_next_parameter)
-smap <c-k> <Plug>(complete_parameter#goto_previous_parameter)
-imap <c-k> <Plug>(complete_parameter#goto_previous_parameter)
-
-"Accelerated-ws设置
-nmap s <Plug>(accelerated_jk_gj)
-nmap w <Plug>(accelerated_jk_gk)
-
-"Easymotion设置
-let g:EasyMotion_do_mapping = 0
-let g:EasyMotion_do_shade = 0
-let g:EasyMotion_smartcase = 1
-map ' <Plug>(easymotion-overwin-f2)
-nmap ' <Plug>(easymotion-overwin-f2)
-vmap ' <Plug>(easymotion-overwin-f2)
-
-"Vista设置
-noremap <LEADER>v :Vista<CR>
+"liuchengxu/vista.vim设置
+noremap <LEADER>dl :Vista coc<CR>
 let g:vista#renderer#enable_icon = 1
 let g:vista_disable_statusline = 1
-let g:vista_default_executive = 'ctags'
+"let g:vista_default_executive = 'ctags'
 let g:vista_echo_cursor_strategy = 'floating_win'
-let g:vista_vimwiki_executive = 'markdown'
 let g:vista_executive_for = {
-			\ 'vimwiki': 'markdown',
-			\ 'pandoc': 'markdown',
-			\ 'markdown': 'toc',
-			\ 'yaml': 'coc',
-			\ 'typescript': 'coc',
-			\ 'typescriptreact': 'coc',
+			\ 'c': 'coc',
 			\ }
 
-"Translator设置
+"voldikss/vim-translator设置
 nmap <silent> <Leader>ts <Plug>TranslateW
 vmap <silent> <Leader>ts <Plug>TranslateWV
 let g:translator_window_max_width=0.3
 let g:translator_window_max_height=0.3
 let g:translator_default_engines=['youdao' , 'google']
 
-"Vim-table-mode设置
-map <LEADER>tm :TableModeToggle<CR>
-
-"Neoformat设置
-nnoremap <LEADER>fm :Neoformat<CR>
+"Nsbdchd/neoformat设置
+" nnoremap <LEADER>fm :Neoformat<CR>
 
 "FZF模糊搜索设置
-" nmap <C-z> :<C-u>SessionSave<CR>
-" nmap <C-x> :<C-u>SessionLoad<CR>
-" nnoremap <silent> <C-h> :History<CR>
-" nnoremap <silent> <C-p> :Files<CR>
-" nnoremap <silent> <C-t> :Colors<CR>
-" nnoremap <silent> <C-f> :Rg<CR>
-" nnoremap <silent> <C-m> :Marks<CR>
+let g:fzf_action = {
+  \ 'alt-h': 'split',
+  \ 'alt-v': 'vsplit' }
 
 nmap <Leader>ss :<C-u>SessionSave<CR>
 nmap <Leader>sl :<C-u>SessionLoad<CR>
-nmap <Leader>cn :<C-u>DashboardNewFile<CR>
 nnoremap <silent> <Leader>fh :History<CR>
 nnoremap <silent> <Leader>ff :Files<CR>
+nnoremap <silent> <Leader>fg :GFiles<CR>
 nnoremap <silent> <Leader>tc :Colors<CR>
-nnoremap <silent> <Leader>fa :Rg<CR>
-nnoremap <silent> <Leader>fb :Marks<CR>
+nnoremap <silent> <Leader>rg :RG <C-r><C-w><CR>
+nnoremap <Leader>fa :Ag <C-r><C-w>
+nnoremap <Leader>fr :Rg <C-r><C-w>
+nnoremap <silent> <Leader>fm :Marks<CR>
 
-let g:fzf_preview_window = 'right:60%'
+noremap <LEADER>fn :DashboardNewFile<CR>
+
+let g:fzf_preview_window = 'down:60%'
 let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
+
+"command! -bang -nargs=? -complete=dir Files
+"    \ call fzf#vim#files(<q-args>, {'options': ['--layout=reverse', '--info=inline', '--preview', 'cat {}']}, <bang>0)
 
 function! s:list_buffers()
 	redir => list
@@ -153,154 +204,54 @@ function! s:delete_buffers(lines)
 	execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
 endfunction
 
+"Rg,可以使用内容和文件名筛选
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --color=always --line-number --no-heading -g !.git  --smart-case -w -F '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
+
+"Ag
+command! -bang -nargs=* Ag
+  \ call fzf#vim#grep(
+  \   'ag --color --smart-case -Q -w --ignore .git  '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
+
+"command RG,搜索内容要连贯.
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --hidden --line-number --no-heading --color=always -g !.gitignore -g !.git --smart-case -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+""""""""""""""""""""""""""""""""""""""""""""""
+"关闭buffer
 command! BD call fzf#run(fzf#wrap({
 			\ 'source': s:list_buffers(),
 			\ 'sink*': { lines -> s:delete_buffers(lines) },
 			\ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
 			\ }))
 
-noremap <c-d> :BD<CR>
+"关闭当前buffer
+noremap <S-Tab> :Bw<CR>
+nnoremap <silent> <Leader>fd :BD<CR>
+"""""""""""""""""""""""""""""""""""""""""""""""
 
-let g:fzf_layout = { 'window': { 'width': 0.7, 'height': 0.6 } }
+"nathanaelkane/vim-indent-guides设置
+let g:indent_guides_default_mapping = 0
+nmap <nop> <Plug>IndentGuidesToggle
 
-" Indentline设置
-let g:indentLine_enabled = 1
-let g:indentLine_char='┆'
-let g:indentLine_fileTypeExclude = ['defx', 'denite','startify','tagbar','vista_kind','vista','coc-explorer','dashboard']
-let g:indentLine_concealcursor = 'niv'
-let g:indentLine_showFirstIndentLevel =1
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_auto_colors = 0
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=green ctermbg=3
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=black ctermbg=4
+let g:indent_guides_color_change_percent = 5
+let g:indent_guide_start_level = 2
+let g:indent_guides_guide_size = 1
+let g:indent_guides_space_guides = 0
 
-
-"MarkdownPreview设置
-let g:instant_markdown_autostart = 0
-let g:instant_markdown_port = 8888
-
-autocmd Filetype markdown inoremap <buffer> ,f <Esc>/<++><CR>:nohlsearch<CR>"_c4l
-autocmd Filetype markdown inoremap <buffer> ,w <Esc>/ <++><CR>:nohlsearch<CR>"_c5l<CR>
-autocmd Filetype markdown inoremap <buffer> ,n ---<Enter><Enter>
-autocmd Filetype markdown inoremap <buffer> ,b **** <++><Esc>F*hi
-autocmd Filetype markdown inoremap <buffer> ,s ~~~~ <++><Esc>F~hi
-autocmd Filetype markdown inoremap <buffer> ,i ** <++><Esc>F*i
-autocmd Filetype markdown inoremap <buffer> ,d `` <++><Esc>F`i
-autocmd Filetype markdown inoremap <buffer> ,c ```<Enter><++><Enter>```<Enter><Enter><++><Esc>4kA
-autocmd Filetype markdown inoremap <buffer> ,m - [ ] <Enter><++><ESC>kA
-autocmd Filetype markdown inoremap <buffer> ,p ![](<++>) <++><Esc>F[a
-autocmd Filetype markdown inoremap <buffer> ,a [](<++>) <++><Esc>F[a
-autocmd Filetype markdown inoremap <buffer> ,1 #<Space><Enter><++><Esc>kA
-autocmd Filetype markdown inoremap <buffer> ,2 ##<Space><Enter><++><Esc>kA
-autocmd Filetype markdown inoremap <buffer> ,3 ###<Space><Enter><++><Esc>kA
-autocmd Filetype markdown inoremap <buffer> ,4 ####<Space><Enter><++><Esc>kA
-autocmd Filetype markdown inoremap <buffer> ,l --------<Enter>
-
-"Vim-go设置
-let g:go_def_mode='gopls'
-let g:go_info_mode='gopls'
-
-"Defx设置
-noremap <LEADER>fe :Defx<CR>
-
-call defx#custom#option('_', {
-			\ 'resume': 1,
-			\ 'winwidth': 30,
-			\ 'split': 'vertical',
-			\ 'direction': 'topleft',
-			\ 'show_ignored_files': 0,
-			\ 'columns': 'mark:indent:git:icons:filename',
-			\ 'root_marker': '',
-			\ })
-
-call defx#custom#column('git', {
-			\   'indicators': {
-			\     'Modified'  : '•',
-			\     'Staged'    : '✚',
-			\     'Untracked' : 'ᵁ',
-			\     'Renamed'   : '≫',
-			\     'Unmerged'  : '≠',
-			\     'Ignored'   : 'ⁱ',
-			\     'Deleted'   : '✖',
-			\     'Unknown'   : '⁇'
-			\   }
-			\ })
-
-call defx#custom#column('mark', { 'readonly_icon': '', 'selected_icon': '' })
-
-augroup user_plugin_defx
-	autocmd!
-	autocmd FileType defx call <SID>defx_mappings()
-	autocmd WinEnter * if &filetype == 'defx' && winnr('$') == 1 | bdel | endif
-	autocmd TabLeave * if &filetype == 'defx' | wincmd w | endif
-augroup END
-
-function! s:jump_dirty(dir) abort
-	let l:icons = get(g:, 'defx_git_indicators', {})
-	let l:icons_pattern = join(values(l:icons), '\|')
-
-	if ! empty(l:icons_pattern)
-		let l:direction = a:dir > 0 ? 'w' : 'bw'
-		return search(printf('\(%s\)', l:icons_pattern), l:direction)
-	endif
-endfunction
-
-function! s:defx_toggle_tree() abort
-	if defx#is_directory()
-		return defx#do_action('open_or_close_tree')
-	endif
-	return defx#do_action('multi', ['drop'])
-endfunction
-
-function! s:defx_mappings() abort
-	setlocal signcolumn=no expandtab
-	nnoremap <silent><buffer><expr> <CR>     <SID>defx_toggle_tree()                    " 打开或者关闭文件夹，文件
-	nnoremap <silent><buffer><expr> <C-h>     defx#do_action('toggle_ignored_files')     " 显示隐藏文件
-	nnoremap <silent><buffer><expr> c defx#do_action('copy')
-	nnoremap <silent><buffer><expr> m defx#do_action('move')
-	nnoremap <silent><buffer><expr> p defx#do_action('paste')
-	nnoremap <silent><buffer><expr> d defx#do_action('open')
-	nnoremap <silent><buffer><expr> K defx#do_action('new_directory')
-	nnoremap <silent><buffer><expr> N defx#do_action('new_file')
-	nnoremap <silent><buffer><expr> M defx#do_action('new_multiple_files')
-	nnoremap <silent><buffer><expr> C defx#do_action('toggle_columns', 'mark:indent:icon:filename:type:size:time')
-	nnoremap <silent><buffer><expr> S defx#do_action('toggle_sort', 'time')
-	nnoremap <silent><buffer><expr> x defx#do_action('remove')
-	nnoremap <silent><buffer><expr> r defx#do_action('rename')
-	nnoremap <silent><buffer><expr> ! defx#do_action('execute_command')
-	nnoremap <silent><buffer><expr> l defx#do_action('execute_system')
-	nnoremap <silent><buffer><expr> yy defx#do_action('yank_path')
-	nnoremap <silent><buffer><expr> <C-h> defx#do_action('toggle_ignored_files')
-	nnoremap <silent><buffer><expr> ; defx#do_action('repeat')
-	nnoremap <silent><buffer><expr> a defx#do_action('cd', ['..'])
-	nnoremap <silent><buffer><expr> ~ defx#do_action('cd')
-	nnoremap <silent><buffer><expr> q defx#do_action('quit')
-	nnoremap <silent><buffer><expr> <Space> defx#do_action('toggle_select') . 'j'
-	nnoremap <silent><buffer><expr> * defx#do_action('toggle_select_all')
-	nnoremap <silent><buffer><expr> j line('.') == line('$') ? 'gg' : 'j'
-	nnoremap <silent><buffer><expr> k line('.') == 1 ? 'G' : 'k'
-	nnoremap <silent><buffer><expr> <C-g> defx#do_action('print')
-	nnoremap <silent><buffer><expr> cd defx#do_action('change_vim_cwd')
-	nnoremap <silent><buffer><expr> u   defx#do_action('cd', ['..'])
-	nnoremap <silent><buffer><expr> 2u  defx#do_action('cd', ['../..'])
-	nnoremap <silent><buffer><expr> 3u  defx#do_action('cd', ['../../..'])
-	nnoremap <silent><buffer><expr> 4u  defx#do_action('cd', ['../../../..'])
-
-endfunction
-
-function! s:defx_toggle_tree() abort
-	if defx#is_directory()
-		return defx#do_action('open_or_close_tree')
-	endif
-	return defx#do_action('multi', ['drop'])
-endfunction
-
-function! s:defx_toggle_tree() abort
-	if defx#is_directory()
-		return defx#do_action('open_or_close_tree')
-	endif
-	return defx#do_action('multi', ['drop'])
-endfunction
-
-let g:defx_icons_column_length = 2
-let g:defx_icons_mark_icon = ''
-let g:defx_icons_parent_icon = ""
 " Rainbow_Parenthess设置
 let g:rbpt_colorpairs = [
 			\ ['brown',       'RoyalBlue3'],
@@ -335,6 +286,52 @@ let g:NERDCustomDelimiters       = {'c': {'left': '/*', 'right': '*/'}}
 let g:NERDCommentEmptyLines      = 1
 let g:NERDTrimTrailingWhitespace = 1
 let g:NERDToggleCheckAllLines    = 1
+
+"vim-visual-multi按键修改
+let g:VM_maps = {}
+let g:VM_maps['Find Under']         = '<C-k>'
+let g:VM_maps['Find Subword Under'] = '<C-k>'
+let g:VM_maps['Goto Next']          = '<C-n>'
+let g:VM_maps['Goto Prev']          = '<C-p>'
+let g:VM_maps['Find Next']          = ''
+let g:VM_maps['Find Prev']          = ''
+let g:VM_maps['Seek Next']          = ''
+let g:VM_maps['Seek Prev']          = '' 
+let g:VM_maps['Remove Region']      = 'q'
+let g:VM_maps['Skip Region']        = ''
+let g:VM_maps["Undo"]               = 'u'
+let g:VM_maps["Redo"]               = '<C-r>'
+
+"chrisbra/changesPlugin [h  ]h
+let g:changes_autocmd=1
+let g:changes_use_icons = 1
+let g:changes_linehi_diff = 0
+let g:changes_diff_preview = 0
+hi ChangesSignTextAdd ctermbg=yellow ctermfg=black guibg=green
+hi ChangesSignTextDel ctermbg=white  ctermfg=black guibg=red
+hi ChangesSignTextCh  ctermbg=black  ctermfg=white guibg=blue
+hi ChangesSignTextDummyCh  ctermfg=NONE ctermbg=white guifg=NONE guibg=white
+hi ChangesSignTextDummyAdd ctermfg=NONE ctermbg=green guifg=NONE guibg=green
+
+"Undotree
+noremap <C-r> :UndotreeToggle<CR>
+let g:undotree_DiffAutoOpen = 1
+let g:undotree_SetFocusWhenToggle = 1
+let g:undotree_DiffAutoOpen = 0
+let g:undotree_ShortIndicators = 1
+let g:undotree_WindowLayout = 2
+let g:undotree_SplitWidth = 24
+function g:Undotree_CustomMap()
+nmap <buffer> <C-p> <plug>UndotreeNextState
+nmap <buffer> <C-n> <plug>UndotreePreviousState
+endfunc
+
+"liuchengxu/vim-which-key
+let g:mapleader = "\<Space>"
+let g:maplocalleader = ","
+nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
+nnoremap <silent> <localleader> :WhichKey ','<CR>
+
 "============
 "美化插件设置
 "============
@@ -352,21 +349,6 @@ let g:NERDToggleCheckAllLines    = 1
 "       \ '                       [KyleJKC]',
 "       \ '',
 "       \ ]
-let g:dashboard_preview_command = 'cat'
-let g:dashboard_preview_file = '~/.config/nvim/dashboard.cat'
-let g:dashboard_preview_file_height = 10
-let g:dashboard_preview_file_width = 80
-let g:dashboard_default_executive ='telescope'
-let g:dashboard_default_executive ='fzf'
-" let g:dashboard_custom_shortcut={
-"       \ 'last_session'       : 'Ctrl X',
-"       \ 'find_history'       : 'Ctrl H',
-"       \ 'find_file'          : 'Ctrl P',
-"       \ 'new_file'           : 'Ctrl E',
-"       \ 'change_colorscheme' : 'Ctrl T',
-"       \ 'find_word'          : 'Ctrl F',
-"       \ 'book_marks'         : 'Ctrl M',
-"       \ }
 let g:dashboard_custom_shortcut={
 			\ 'last_session'       : 'SPC s l',
 			\ 'find_history'       : 'SPC f h',
@@ -376,7 +358,6 @@ let g:dashboard_custom_shortcut={
 			\ 'find_word'          : 'SPC f a',
 			\ 'book_marks'         : 'SPC f b',
 			\ }
-noremap <LEADER>fn :DashboardNewFile<CR>
 
 "Galaxyline设置
 luafile ~/.config/nvim/theme/eviline.lua
@@ -386,6 +367,7 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 "Vim-buffet设置
+let g:buffet_show_index = 1
 nmap <leader>1 <Plug>BuffetSwitch(1)
 nmap <leader>2 <Plug>BuffetSwitch(2)
 nmap <leader>3 <Plug>BuffetSwitch(3)
@@ -396,3 +378,70 @@ nmap <leader>7 <Plug>BuffetSwitch(7)
 nmap <leader>8 <Plug>BuffetSwitch(8)
 nmap <leader>9 <Plug>BuffetSwitch(9)
 nmap <leader>0 <Plug>BuffetSwitch(10)
+
+
+""""""""""""""""""""自制jump-motion"""""""""""""""
+"CTRL-o,CTRL-i系统不可修改键位,重新映射到<A-,>,<A-.>
+"映射<C-o>,<C-i>不能清空
+"map <C-o> <nop>
+"map <C-i> <nop>
+"
+"function! FzhGotoJump()
+"  jumps
+"  let j = input("Please select your jump: ")
+"  if j != ''
+"    let pattern = '\v\c^\+'
+"    if j =~ pattern
+"      let j = substitute(j, pattern, '', 'g')
+"      execute "normal " . j . "\<c-i>"
+"    else
+"      execute "normal " . j . "\<c-o>"
+"    endif
+"  endif
+"endfunction
+
+function! FzhGotoJump_prev()
+      execute "normal " . 1 . "\<c-o>"
+endfunction
+function! FzhGotoJump_next()
+      execute "normal " . 1 . "\<c-i>"
+endfunction
+
+nnoremap <A-,> :call FzhGotoJump_prev()<CR>
+nnoremap <A-.> :call FzhGotoJump_next()<CR>
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Yggdroot/LeaderF
+" don't show the help in normal mode
+let g:Lf_HideHelp = 1
+let g:Lf_UseCache = 0
+let g:Lf_UseVersionControlTool = 0
+let g:Lf_IgnoreCurrentBufferName = 1
+" popup mode
+"let g:Lf_WindowPosition = 'popup'
+let g:Lf_PreviewInPopup = 1
+let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
+let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
+
+"修改键位
+let g:Lf_CommandMap = {'<C-P>': ['<C-E>'], '<C-K>': ['<C-P>'], '<C-J>': ['<C-N>'], '<ESC>': ['<C-Q>', '<ESC>'], '<C-UP>': ['<C-K>'], '<C-DOWN>': ['<C-J>'], '<C-X>': ['<C-H>'], '<C-]>': ['<C-V>']}
+
+"let g:Lf_ShortcutF = '<leader>lf'
+let g:Lf_ShortcutF = '<nop>'
+let g:Lf_ShortcutB = '<nop>'
+"选中后查找
+xnoremap / :<C-U><C-R>=printf("Leaderf! rg --current-buffer -F -e %s ", leaderf#Rg#visual())<CR><CR>
+noremap <leader>ll :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
+noremap <leader>lh :<C-U>Leaderf! rg --recall<CR>
+noremap <leader>lm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
+
+noremap <leader>lf :<C-U><C-R>=printf("Leaderf function %s", "")<CR><CR>
+noremap <leader>lt :<C-U><C-R>=printf("Leaderf bufTag %s", "")<CR><CR>
+
+"lfv89/vim-interestingwords
+let g:interestingWordsDefaultMappings = 0
+nnoremap <silent> <leader>m :call InterestingWords('n')<cr>
+vnoremap <silent> <leader>m :call InterestingWords('v')<cr>
+nnoremap <silent> <leader>M :call UncolorAllWords()<cr>
+
+nnoremap <silent> n :call WordNavigation(1)<cr>
+nnoremap <silent> N :call WordNavigation(0)<cr>
