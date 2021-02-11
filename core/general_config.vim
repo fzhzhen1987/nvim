@@ -1,4 +1,4 @@
-set mouse=nv
+set mouse=
 set cursorline
 set report=0
 set errorbells
@@ -9,13 +9,11 @@ set fileformats=unix,dos,mac
 set magic
 set path+=**
 set isfname-==
-set virtualedit=block
-set synmaxcol=2500
-set formatoptions+=1
-set formatoptions-=t
-set formatoptions-=o
+set virtualedit=onemore
+set formatoptions-=tc
+
 if has('patch-7.3.541')
-	set formatoptions+=j
+	set formatoptions+=1j
 endif
 
 if has('vim_starting')
@@ -27,26 +25,11 @@ endif
 set viewoptions=folds,cursor,curdir,slash,unix
 set sessionoptions=curdir,help,tabpages,winsize
 
-if has('mac')
-	let g:clipboard = {
-				\   'name': 'macOS-clipboard',
-				\   'copy': {
-				\      '+': 'pbcopy',
-				\      '*': 'pbcopy',
-				\    },
-				\   'paste': {
-				\      '+': 'pbpaste',
-				\      '*': 'pbpaste',
-				\   },
-				\   'cache_enabled': 0,
-				\ }
-endif
-
 if has('clipboard')
 	set clipboard& clipboard+=unnamedplus
 endif
 
-" Wildmenu {{{
+" Wildmenu {{
 " --------
 if has('wildmenu')
 	if ! has('nvim')
@@ -68,22 +51,24 @@ if has('wildmenu')
 	set wildignore+=__pycache__,*.egg-info,.pytest_cache,.mypy_cache/**
 	set wildcharm=<C-z>  " substitue for 'wildchar' (<Tab>) in macros
 endif
-" }}}
+" }}
 
 " Vim Directories {{{
 " ---------------
 set nobackup
 set nowritebackup
-set undofile noswapfile
+set noundofile
+set noswapfile
 set directory=$DATA_PATH/swap//,$DATA_PATH,~/tmp,/var/tmp,/tmp
 set undodir=$DATA_PATH/undo//,$DATA_PATH,~/tmp,/var/tmp,/tmp
 set backupdir=$DATA_PATH/backup/,$DATA_PATH,~/tmp,/var/tmp,/tmp
 set viewdir=$DATA_PATH/view/
+
 " Use the coc-spell-checker to do this
 " set spellfile=$VIM_PATH/spell/en.utf-8.add
 
 " History saving
-set history=2000
+set history=1000
 
 if has('nvim') && ! has('win32') && ! has('win64')
 	set shada=!,'300,<50,@100,s10,h
@@ -151,11 +136,7 @@ endif
 
 " Timing {{{
 " ------
-set timeout ttimeout
-set timeoutlen=500   " Time out on mappings
-set ttimeoutlen=10   " Time out on key codes
 set updatetime=100   " Idle time to write swap and trigger CursorHold
-set redrawtime=1500  " Time in milliseconds for stopping display redraw
 
 " }}}
 
@@ -196,8 +177,7 @@ set splitbelow splitright       " Splits open bottom right
 set switchbuf=useopen,vsplit    " Jump to the first open window
 set backspace=indent,eol,start  " Intuitive backspacing in insert mode
 set diffopt=filler,iwhite       " Diff mode: show fillers, ignore whitespace
-set completeopt=menu,menuone    " Always show menu, even for one item
-set completeopt+=noselect,noinsert
+set completeopt=longest,noinsert,menuone,noselect,preview
 
 if exists('+completepopup')
 	set completeopt+=popup
@@ -221,8 +201,8 @@ set number              " Show number
 set relativenumber      " Show relative number
 set noshowmode          " Don't show mode on bottom
 set noruler             " Disable default status ruler
-set shortmess=aFc
-set scrolloff=2         " Keep at least 2 lines above/below
+set shortmess+=c
+set scrolloff=3         " Keep at least 3 lines above/below
 set fillchars+=vert:\|  " add a bar for vertical splits
 set fcs=eob:\           " hide ~ tila
 set list
@@ -286,3 +266,4 @@ endif
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 " }}}
 
+set synmaxcol=2500
