@@ -1,165 +1,205 @@
 {
-  "languageserver": {
-    "lua": {
-      "command": "lua-lsp",
-      "filetypes": ["lua"]
-    }
-  },
-
-  "coc.preferences.extensionUpdateCheck": "daily",
-  "suggest.triggerAfterInsertEnter": false,
-  "suggest.timeout": 500,
-  "suggest.noselect": false,
-  "suggest.labelMaxLength": 30,
-  "suggest.detailMaxLength": 30,
-  "suggest.detailField": "abbr",
-  "suggest.snippetIndicator": "🌟",
-  "suggest.triggerCompletionWait": 100,
-  "suggest.echodocSupport": true,
-  "suggest.completionItemKindLabels": {
-    "keyword": "\uf1de",
-    "variable": "\ue79b",
-    "value": "\uf89f",
-    "operator": "\u03a8",
-    "function": "\u0192",
-    "reference": "\ufa46",
-    "constant": "\uf8fe",
-    "method": "\uf09a",
-    "struct": "\ufb44",
-    "class": "\uf0e8",
-    "interface": "\uf417",
-    "text": "\ue612",
-    "enum": "\uf435",
-    "enumMember": "\uf02b",
-    "module": "\uf40d",
-    "color": "\ue22b",
-    "property": "\ue624",
-    "field": "\uf9be",
-    "unit": "\uf475",
-    "event": "\ufacd",
-    "file": "\uf15c",
-    "folder": "\uf114",
-    "snippet": "\ue60b",
-    "typeParameter": "\uf728",
-    "default": "\uf29c"
-  },
-  //diagnostic
-  "diagnostic.signOffset": 9999999,
-  "diagnostic.errorSign": "●",
-  "diagnostic.warningSign": "●",
-  "diagnostic.infoSign": "●",
-  "diagnostic.displayByAle": false,
-  "diagnostic.refreshOnInsertMode": true,
-  //git
-  "git.enableGutters": true,
-  "git.branchCharacter": "\uf418",
-  "git.addGBlameToBufferVar": true,
-  "git.addGBlameToVirtualText": true,
-  "git.virtualTextPrefix": " ❯❯❯ ",
-  "git.addedSign.hlGroup": "GitGutterAdd",
-  "git.changedSign.hlGroup": "GitGutterChange",
-  "git.removedSign.hlGroup": "GitGutterDelete",
-  "git.topRemovedSign.hlGroup": "GitGutterDelete",
-  "git.changeRemovedSign.hlGroup": "GitGutterChangeDelete",
-  "git.addedSign.text": "▋",
-  "git.changedSign.text": "▋",
-  "git.removedSign.text": "▋",
-  "git.topRemovedSign.text": "▔",
-  "git.changeRemovedSign.text": "▋",
-  //Snippet
-  "coc.preferences.snippetStatusText": "Ⓢ ",
-  //CocList
-  "list.source.files.defaultOptions": ["--auto-preview"],
-  "list.source.outline.defaultOptions": ["--auto-preview"],
-  //Pairs
-  "pairs.enableCharacters": ["(", "[", "{", "'", "\"", "`"],
-  //prettier
-  "coc.preferences.formatOnSaveFiletypes": [
-    "html",
-    "css",
-    "markdown",
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact",
-    "go",
-    "json"
-  ],
-  "prettier.statusItemText": "ⓟ ",
-  "prettier.eslintIntegration": true,
-  "prettier.tslintIntegration": false,
-  "prettier.stylelintIntegration": true,
-  "prettier.disableSuccessMessage": true,
-  //emmet
-  "emmet.includeLanguages": {
-    "vue-html": "html",
-    "javascript": "javascriptreact",
-    "typescriptreact": "typescriptreact"
-  },
-  //imselect
-  "imselect.enableStatusItem": false,
-  //multiple curssor
-  "cursors.nextKey": "<C-n>",
-  "cursors.previousKey": "<C-p>",
-  "cursors.cancelKey": "<esc>",
-  //sessions
-  "session.directory": "~/.cache/vim/session",
-  // coc-explorer
-  "explorer.icon.expanded": "▾",
-  "explorer.icon.collapsed": "▸",
-  "explorer.width": 30,
-  "explorer.icon.enableNerdfont": true,
-  "explorer.quitOnOpen": true,
-  "explorer.floating.width": -20,
-  "explorer.floating.height": -10,
-  "explorer.openAction.strategy": "sourceWindow",
-  // eslint
-  "eslint.filetypes": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
-  "eslint.autoFix": true,
-  "eslint.autoFixOnSave": true,
-  // coc-actions
-  "coc-actions.hideCursor": false,
-  // Cspell
-  "cSpell.fixSpellingWithRenameProvider": true,
-  "cSpell.showStatus": false,
-  "cSpell.enabledLanguageIds": [
-    "asciidoc",
-    "c",
-    "cpp",
-    "csharp",
-    "css",
-    "git-commit",
-    "gitcommit",
-    "go",
-    "haskell",
-    "html",
-    "java",
-    "javascript",
-    "javascriptreact",
-    "json",
-    "jsonc",
-    "latex",
-    "less",
-    "markdown",
-    "php",
-    "plaintext",
-    "python",
-    "pug",
-    "restructuredtext",
-    "rust",
-    "scala",
-    "scss",
-    "text",
-    "typescript",
-    "typescriptreact",
-    "yaml",
-    "yml",
-    "vim"
-  ],
-  "cSpell.userWords": ["Bilibili", "Floaterm", "Rnvimr", "wsdjeg"]
+	"languageserver": {
+		"bash": {
+			"command": "bash-language-server",
+			"args": [
+				"start"
+			],
+			"filetypes": [
+				"sh"
+			],
+			"ignoredRootPaths": []
+		},
+		//		"clangd": {
+		//			"command": "clangd",
+		//			"filetypes": [
+		//				"c",
+		//				"c++",
+		//				"cpp",
+		//				"objc",
+		//				"objcpp"
+		//			],
+		//			"rootPatterns": [
+		//				"compile_flags.txt",
+		//				".ccls-root",
+		//				"compile_commands.json",
+		//				".git/",
+		//				".hg/"
+		//			]
+		//		}
+		//		"ccls": {
+		//			"command": "ccls",
+		//			"filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
+		//			"rootPatterns": [".ccls", ".ccls-root", "compile_commands.json", ".git/", ".hg/"],
+		//			"initializationOptions": {
+		//				"cache": {
+		//					"directory": "/tmp/ccls"
+		//				}
+		//			}
+		//}
+		"ccls": {
+			"command": "ccls",
+			"filetypes": [
+				"c",
+				"cpp"
+			],
+			"rootPatterns": [
+				"clang",
+				"ccls",
+				"compile_commands.json",
+				"vim/",
+				"git/",
+				"hg/"
+			],
+			"initializationOptions": {
+				"cache": {
+					"directory": "/tmp/ccls"
+				}
+			}
+		}
+	},
+	"codeLens.enable": true,
+	"coc.preferences.jumpCommand": "vsplit",
+	"list.previewSplitRight": true,
+	"coc.preferences.extensionUpdateCheck": "daily",
+	"suggest.triggerAfterInsertEnter": false,
+	"suggest.timeout": 5000,
+	"suggest.labelMaxLength": 30,
+	"suggest.detailMaxLength": 30,
+	"suggest.detailField": "abbr",
+	"suggest.snippetIndicator": "🌟",
+	"suggest.triggerCompletionWait": 100,
+	"suggest.echodocSupport": true,
+	"suggest.completionItemKindLabels": {
+		"keyword": "\uf1de",
+		"variable": "\ue79b",
+		"value": "\uf89f",
+		"operator": "\u03a8",
+		"function": "\u0192",
+		"reference": "\ufa46",
+		"constant": "\uf8fe",
+		"method": "\uf09a",
+		"struct": "\ufb44",
+		"class": "\uf0e8",
+		"interface": "\uf417",
+		"text": "\ue612",
+		"enum": "\uf435",
+		"enumMember": "\uf02b",
+		"module": "\uf40d",
+		"color": "\ue22b",
+		"property": "\ue624",
+		"field": "\uf9be",
+		"unit": "\uf475",
+		"event": "\ufacd",
+		"file": "\uf15c",
+		"folder": "\uf114",
+		"snippet": "\ue60b",
+		"typeParameter": "\uf728",
+		"default": "\uf29c"
+	},
+	"list.nextKeymap": "<C-n>",
+	"list.previousKeymap": "<C-p>",
+	"list.normalMappings": {
+		"<C-k>": "do:previewup",
+		"<C-j>": "do:previewdown"
+	},
+	//coc-explorer
+	"explorer.quitOnOpen": true,
+	"explorer.sources": [
+		{
+			"name": "buffer",
+			"expand": false
+		},
+		{
+			"name": "file",
+			"expand": true
+		}
+	],
+	"explorer.file.column.indent.indentLine": true,
+	"explorer.file.showHiddenFiles": true,
+	"explorer.icon.enableNerdfont": true,
+	"explorer.file.column.git.showIgnored": true,
+	"explorer.keyMappingMode": "none",
+	"explorer.buffer.showHiddenBuffers": false,
+	"explorer.keyMappings.global": {
+		"q": "quit",
+		"zh": "toggleHidden",
+		"rn": "rename",
+		"o": "expand",
+		"O": "collapse",
+		"g": "gotoParent",
+		"<cr>": "open",
+		"h": "toggleSelection",
+		"<tab>": "actionMenu",
+		"n": "open:tab",
+		"yp": "copyFilepath",
+		"yn": "copyFilename",
+		"yy": "copyFile",
+		"j": "cutFile",
+		"p": "pasteFile",
+		"x": "deleteForever",
+		"a": "addFile",
+		"A": "addDirectory",
+		"R": "refresh",
+		"?": "help",
+		"f": "search"
+	},
+	//diagnostic
+	"diagnostic.signOffset": 1,
+	"diagnostic.errorSign": "●",
+	"diagnostic.warningSign": "●",
+	"diagnostic.infoSign": "●",
+	"diagnostic.displayByAle": false,
+	"diagnostic.refreshOnInsertMode": false,
+	"diagnostic.virtualTextPrefix": " ❯❯❯ ",
+	"diagnostic.checkCurrentLine": true,
+	"diagnostic.virtualText": true,
+	//Snippet
+	"coc.preferences.snippetStatusText": "Ⓢ ",
+	//CocList
+	"list.source.files.defaultOptions": [
+		"--auto-preview"
+	],
+	"list.source.outline.defaultOptions": [
+		"--auto-preview"
+	],
+	//Pairs
+	"pairs.enableCharacters": [
+		"(",
+		"[",
+		"{",
+		"<",
+		"'",
+		"\"",
+		"`"
+	],
+	//prettier
+	"coc.preferences.formatOnSaveFiletypes": [
+		"markdown",
+		"css",
+		"json"
+	],
+	"prettier.statusItemText": "ⓟ ",
+	"prettier.eslintIntegration": true,
+	"prettier.tslintIntegration": false,
+	"prettier.stylelintIntegration": true,
+	"prettier.disableSuccessMessage": true,
+	//imselect
+	"imselect.enableStatusItem": false,
+	//sessions
+	"session.directory": "~/.cache/vim/session",
+	// coc-explorer
+	"explorer.icon.expanded": "▾",
+	"explorer.icon.collapsed": "▸",
+	"explorer.width": 30,
+	"explorer.icon.enableNerdfont": true,
+	"explorer.quitOnOpen": true,
+	"explorer.floating.width": -20,
+	"explorer.floating.height": -10,
+	"explorer.openAction.strategy": "sourceWindow",
+	// eslint
+	"eslint.autoFix": true,
+	"eslint.autoFixOnSave": true,
+	// coc-actions
+	"coc-actions.hideCursor": false
 }
