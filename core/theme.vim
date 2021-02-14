@@ -15,3 +15,15 @@ let g:enable_italic_font=1
 let &t_ut=''
 " let g:oceanic_material_transparent_background = 1
 " let g:hybrid_transparent_background = 1
+
+"将CocHighlight RedrawDebugComposed绑定到前面组里
+highlight link  CocHighlightText Search
+
+hi CursorLine guifg=#81a2be guibg=#002943
+
+hi Cursor guifg=white guibg=#5F875F
+hi iCursor guifg=black guibg=Yellow
+set guicursor=n-v-c:block-Cursor
+set guicursor+=i:ver100-iCursor
+set guicursor+=n-v-c:blinkon0
+set guicursor+=i:blinkwait10
