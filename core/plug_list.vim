@@ -33,8 +33,8 @@ Plug 'dominikduda/vim_current_word'
 "ranger插件
 Plug 'kevinhwang91/rnvimr', {'on': 'RnvimrToggle'}
 "fzf相关
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+"Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+"Plug 'junegunn/fzf.vim'
 
 "文件中显示git修改
 Plug 'airblade/vim-gitgutter'
@@ -138,51 +138,51 @@ noremap <LEADER>gg :tabe<CR>:-tabmove<CR>:term lazygit<CR>
 
 
 "FZF模糊搜索设置
-let g:fzf_preview_window = 'down:60%'
-let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
-let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
+"let g:fzf_preview_window = 'down:60%'
+"let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+"let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
+"
+"let g:fzf_action = {
+"  \ 'ctrl-o': 'split',
+"  \ 'ctrl-e': 'vsplit' }
 
-let g:fzf_action = {
-  \ 'ctrl-o': 'split',
-  \ 'ctrl-e': 'vsplit' }
-
-nnoremap <silent> <Leader>fh :History<CR>
-nnoremap <silent> <Leader>ff :Files<CR>
-nnoremap <silent> <Leader>fg :GFiles<CR>
-nnoremap <silent> <Leader>tc :Colors<CR>
-nnoremap <silent> <Leader>rg :RG <C-r><C-w><CR>
-nnoremap <Leader>fa :Ag <C-r><C-w>
-nnoremap <Leader>fr :Rg <C-r><C-w>
-nnoremap <silent> <Leader>fm :Marks<CR>
+"nnoremap <silent> <Leader>fh :History<CR>
+"nnoremap <silent> <Leader>ff :Files<CR>
+"nnoremap <silent> <Leader>fg :GFiles<CR>
+"nnoremap <silent> <Leader>tc :Colors<CR>
+"nnoremap <silent> <Leader>rg :RG <C-r><C-w><CR>
+"nnoremap <Leader>fa :Ag <C-r><C-w>
+"nnoremap <Leader>fr :Rg <C-r><C-w>
+"nnoremap <silent> <Leader>fm :Marks<CR>
 
 "fr,可以使用内容和文件名筛选
-command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   'rg --color=always --line-number --no-heading -g !.git  --smart-case -w -F '.shellescape(<q-args>), 1,
-  \   fzf#vim#with_preview(), <bang>0)
-
-"fa
-command! -bang -nargs=* Ag
-  \ call fzf#vim#grep(
-  \   'rg --color=always --line-number --no-heading -g !.git  --smart-case -F '.shellescape(<q-args>), 1,
-  \   fzf#vim#with_preview(), <bang>0)
-
-"Ag
+"command! -bang -nargs=* Rg
+"  \ call fzf#vim#grep(
+"  \   'rg --color=always --line-number --no-heading -g !.git  --smart-case -w -F '.shellescape(<q-args>), 1,
+"  \   fzf#vim#with_preview(), <bang>0)
+"
+""fa
 "command! -bang -nargs=* Ag
 "  \ call fzf#vim#grep(
-"  \   'ag --color --smart-case -Q --ignore .git  '.shellescape(<q-args>), 1,
+"  \   'rg --color=always --line-number --no-heading -g !.git  --smart-case -F '.shellescape(<q-args>), 1,
 "  \   fzf#vim#with_preview(), <bang>0)
-
-"command RG,搜索内容要连贯.
-function! RipgrepFzf(query, fullscreen)
-  let command_fmt = 'rg --column --hidden --line-number --no-heading --color=always -g !.gitignore -g !.git --smart-case -- %s || true'
-  let initial_command = printf(command_fmt, shellescape(a:query))
-  let reload_command = printf(command_fmt, '{q}')
-  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
-  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
-endfunction
-
-command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+"
+""Ag
+""command! -bang -nargs=* Ag
+""  \ call fzf#vim#grep(
+""  \   'ag --color --smart-case -Q --ignore .git  '.shellescape(<q-args>), 1,
+""  \   fzf#vim#with_preview(), <bang>0)
+"
+""command RG,搜索内容要连贯.
+"function! RipgrepFzf(query, fullscreen)
+"  let command_fmt = 'rg --column --hidden --line-number --no-heading --color=always -g !.gitignore -g !.git --smart-case -- %s || true'
+"  let initial_command = printf(command_fmt, shellescape(a:query))
+"  let reload_command = printf(command_fmt, '{q}')
+"  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+"  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+"endfunction
+"
+"command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 
 "airblade/vim-gitgutter
 let g:gitgutter_sign_allow_clobber = 0
