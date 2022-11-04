@@ -21,7 +21,7 @@ Plug 'tpope/vim-surround'
 Plug 'gcmt/wildfire.vim'
 
 "undotree
-Plug 'mbbill/undotree'
+"Plug 'mbbill/undotree'
 
 "关闭buffer
 Plug 'moll/vim-bbye'
@@ -29,6 +29,10 @@ Plug 'moll/vim-bbye'
 "高亮多个单词
 Plug 'lfv89/vim-interestingwords'
 Plug 'dominikduda/vim_current_word'
+
+"lf插件
+Plug 'ptzz/lf.vim'
+Plug 'voldikss/vim-floaterm'
 
 "ranger插件
 Plug 'kevinhwang91/rnvimr', {'on': 'RnvimrToggle'}
@@ -54,8 +58,11 @@ Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 "显示当前文件行修改处高亮
 Plug 'chrisbra/changesPlugin'
 
-"对齐,使用时候需要具体查
+"Markdown对齐,使用时候需要具体查
+Plug 'preservim/vim-markdown'
+Plug 'godlygeek/tabular'
 Plug 'junegunn/vim-easy-align', {'on':'<Plug>(EasyAlign)'}
+Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle', 'for': ['text', 'markdown', 'vim-plug'] }
 
 "主题
 Plug 'kristijanhusak/vim-hybrid-material'
@@ -67,16 +74,10 @@ Plug 'mhartington/oceanic-next'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 
-
-
-
-
-
 call plug#end()
 
 "===================插件配置开始=====================
 "jiangmiao/auto-pairs
-let g:AutoPairsFlyMode = 0
 let g:AutoPairsShortcutJump = ''
 let g:AutoPairsShortcutBackInsert= ''
 let g:AutoPairsShortcutToggle = ''
@@ -84,6 +85,8 @@ let g:AutoPairsShortcutFastWrap = ''
 let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"'}
 let g:AutoPairs['<']='>'
 let g:AutoPairsMapCh = 0
+let g:AutoPairsFlyMode = 0
+let g:AutoPairsMultilineClose=0
 
 
 "tpope/vim-surround和gcmt/wildfire.vim"
@@ -97,17 +100,17 @@ nmap ys <Plug>Ysurround
 
 
 "Undotree
-noremap <C-r> :UndotreeToggle<CR>
-let g:undotree_DiffAutoOpen = 1
-let g:undotree_SetFocusWhenToggle = 1
-let g:undotree_DiffAutoOpen = 1
-let g:undotree_ShortIndicators = 1
-let g:undotree_WindowLayout = 2
-let g:undotree_SplitWidth = 24
-function g:Undotree_CustomMap()
-nmap <buffer> <C-p> <plug>UndotreeNextState
-nmap <buffer> <C-n> <plug>UndotreePreviousState
-endfunc
+" noremap <C-r> :UndotreeToggle<CR>
+" let g:undotree_DiffAutoOpen = 1
+" let g:undotree_SetFocusWhenToggle = 1
+" let g:undotree_DiffAutoOpen = 1
+" let g:undotree_ShortIndicators = 1
+" let g:undotree_WindowLayout = 2
+" let g:undotree_SplitWidth = 24
+" function g:Undotree_CustomMap()
+" nmap <buffer> <C-p> <plug>UndotreeNextState
+" nmap <buffer> <C-n> <plug>UndotreePreviousState
+" endfunc
 
 
 "moll/vim-bbye
@@ -195,13 +198,10 @@ let g:gitgutter_sign_removed = '▏'
 let g:gitgutter_sign_removed_first_line = '▔'
 let g:gitgutter_sign_modified_removed = '▒'
 nnoremap h :GitGutterPreviewHunk<CR>
-nnoremap <LEADER>gp :GitGutterPrevHunk<CR>
-nnoremap <LEADER>gn :GitGutterNextHunk<CR>
-nnoremap <LEADER>gl :GitGutterLineHighlightsToggle<CR>
 
 
 "jackguo380/vim-lsp-cxx-highlight
-let g:lsp_cxx_hl_use_text_props = 1
+let g:lsp_cxx_hl_use_text_props = 0
 
 
 "nathanaelkane/vim-indent-guides设置
@@ -216,8 +216,6 @@ let g:indent_guides_color_change_percent = 5
 let g:indent_guide_start_level = 2
 let g:indent_guides_guide_size = 1
 let g:indent_guides_space_guides = 0
-
-set ts=4 sw=4
 
 
 "kien/rainbow_parentheses.vim
@@ -275,9 +273,20 @@ hi ChangesSignTextDummyAdd ctermfg=NONE ctermbg=green guifg=NONE guibg=green
 
 
 "junegunn/vim-easy-align
-xmap ga <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
+"1.可视模式选中 2.<leader>ma 3输入 数字+对齐符号
+xmap <leader>ma <Plug>(EasyAlign)
+nmap <leader>ma <Plug>(EasyAlign)
 
+"dhruvasagar/vim-table-mode
+"1.开启toggle 2.开始编辑
+nmap <leader>mm :TableModeToggle<cr>
+
+nmap <leader>mt :TableFormat<cr>
+
+"godlygeek/tabular
+"1.选中或者不选中执行命令 2.输入分隔符
+nmap <leader>mf :Tabu /
+xmap <leader>mf :Tabu /
 
 "主题
 
@@ -330,13 +339,15 @@ let g:Lf_PreviewCode = 1
 let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
 let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
 
-noremap <C-u> :<C-U><C-R>=printf("Leaderf bufTag %s", "")<CR><CR>
+"noremap <C-u> :<C-U><C-R>=printf("Leaderf bufTag %s", "")<CR><CR>
 noremap <silent> <A-.> :<C-U><C-R>=printf("Leaderf gtags -d %s --top --auto-preview", expand("<cword>"))<CR><CR>
 noremap <silent> <A-,> :<C-U><C-R>=printf("Leaderf gtags -r %s --top --auto-preview", expand("<cword>"))<CR><CR>
 noremap <silent> <A-p> :<C-U><C-R>=printf("Leaderf gtags --recall %s --top --auto-preview", "")<CR><CR>
-noremap <silent> <leader>js :<C-U><C-R>=printf("Leaderf gtags -s %s --top --auto-preview", expand("<cword>"))<CR><CR>
+"noremap <silent> <leader>js :<C-U><C-R>=printf("Leaderf gtags -s %s --top --auto-preview", expand("<cword>"))<CR><CR>
 "noremap <silent> <leader>jf :GscopeFind f <C-R>=expand("<cfile>")<cr><cr>
 "noremap <silent> <leader>ji :GscopeFind i <C-R>=expand("<cfile>")<cr><cr>
+
+":lua print(vim.fn.printf("Leaderf gtags -s %s --top --auto-preview", vim.fn.expand('<cword>')))
 
 "查找当前光标所在单词,C-r打开预览,C-j/k预览翻页,C-e|C-o分屏
 noremap <silent> <leader>jh :<C-U><C-R>=printf("Leaderf mru %s --stayOpen", "")<CR><CR>
@@ -364,10 +375,13 @@ let g:Lf_CommandMap = {
 let g:Lf_ShortcutF = '<nop>'
 let g:Lf_ShortcutB = '<nop>'
 
+"ranger
+" noremap <LEADER>ra :RnvimrToggle<CR>
 
-
-
-
+"lf插件
+noremap <LEADER>ra :Lf<CR>
+let g:floaterm_width = 0.9
+let g:floaterm_height = 0.9
 
 
 "加载lua配置文件
