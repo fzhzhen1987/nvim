@@ -1,7 +1,6 @@
 let mapleader=" "
 
 "命令行模式补全
-cnoremap <C-s> <C-u><CR>
 cnoremap <C-f> <right>
 cnoremap <C-b> <left>
 cnoremap <C-e> <END>
@@ -25,6 +24,9 @@ vnoremap <C-c> "+y
 
 noremap <LEADER><CR> :nohlsearch<CR>
 
+nnoremap <M-l> <C-y>
+nnoremap <C-l> <C-e>
+
 noremap <C-p> k
 noremap <C-n> j
 noremap <C-b> h
@@ -37,9 +39,6 @@ inoremap <C-f> <right>
 
 noremap W 5kzz
 noremap S 5jzz
-noremap A 5h
-noremap D 5l
-
 
 inoremap <C-s> <esc>
 
@@ -47,7 +46,6 @@ map <C-q><C-q> :q!<CR>
 
 "单词移动
 noremap a b
-""noremap d w
 noremap d e
 
 "删除当前单词
@@ -70,7 +68,6 @@ nmap - *
 nmap = #
 nmap ' %
 
-
 """""""输入括号自动输入匹配括号
 "inoremap ' ''<ESC>i
 "inoremap " ""<ESC>i
@@ -84,10 +81,6 @@ map Q :wq<CR>
 map <A-q> :qa<CR>
 
 noremap  <C-z> <nop>
-
-
-"ranger
-noremap <LEADER>ra :RnvimrToggle<CR>
 
 "删除行尾空格
 noremap <C-z> :%s/\s*$//g<CR>
