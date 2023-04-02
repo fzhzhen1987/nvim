@@ -74,6 +74,9 @@ Plug 'mhartington/oceanic-next'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 
+"copilot
+Plug 'github/copilot.vim'
+
 call plug#end()
 
 "===================插件配置开始=====================
@@ -98,6 +101,10 @@ nmap cs <Plug>Csurround
 xmap S  <Plug>VSurround
 nmap ys <Plug>Ysurround
 
+
+"github/copilot.vim"
+let g:copilot_no_tab_map = v:true
+imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
 
 "Undotree
 " noremap <C-r> :UndotreeToggle<CR>
