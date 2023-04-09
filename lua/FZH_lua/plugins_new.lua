@@ -107,14 +107,14 @@ return packer.startup(function(use)
 	use "hrsh7th/cmp-path"
 	use "hrsh7th/cmp-nvim-lua"
 	use "saadparwaiz1/cmp_luasnip" -- snippet completions
-	use{"L3MON4D3/LuaSnip", tag = "v<CurrentMajor>.*"}
+	use{"L3MON4D3/LuaSnip", tag = "v<CurrentMajor>.*", run = "make install_jsregexp"}
 	use "onsails/lspkind-nvim"
 
 
 	-- telescope
-	use {"nvim-telescope/telescope.nvim", tag = "nvim-0.6"}
+	use {"nvim-telescope/telescope.nvim"}
 	use {"nvim-telescope/telescope-fzf-native.nvim", run = "make"}
-	use {"nvim-telescope/telescope-live-grep-args.nvim", commit = "1d2137a1ad5e"}
+	use {"nvim-telescope/telescope-live-grep-args.nvim"}
 
 
 	-- 语法高亮
