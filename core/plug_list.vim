@@ -78,6 +78,10 @@ Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 " Plug 'github/copilot.vim'
 Plug 'Exafunction/codeium.vim', { 'branch': 'main' }
 
+"statusline 状态栏设置
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
 call plug#end()
 
 "===================插件配置开始=====================
@@ -94,7 +98,7 @@ let g:AutoPairsMultilineClose=0
 
 
 "tpope/vim-surround和gcmt/wildfire.vim"
-let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "ip", "it", "i>"]
+let g:wildfire_objects = [ "iw", "i'", 'i"', "i)", "i]", "i}", "ip", "it", "i>"]
 
 let g:surround_no_mappings = 1
 nmap js <Plug>Dsurround
@@ -132,6 +136,8 @@ noremap <S-Tab> :Bw<CR>
 
 
 "lfv89/vim-interestingwords
+let g:interestingWordsGUIColors = ['#FF4500', '#FF8C00', '#FFD700', '#00FF00', '#00FFFF', '#1E90FF', '#8A2BE2', '#FF00FF', '#F2F2F2', '#aeee00', '#ff0000', '#56C38D', '#ABABAB', '#b88823', '#ffa724', '#8CCBEA', '#A4E57E', '#FFDB72', '#FF7272', '#FFB3FF', '#9999FF']
+
 let g:interestingWordsDefaultMappings = 0
 nnoremap <silent> <leader>m :call InterestingWords('n')<cr>
 vnoremap <silent> <leader>m :call InterestingWords('v')<cr>
@@ -307,6 +313,7 @@ xmap <leader>mf :Tabu /
 "====================代码分析===========================
 let $GTAGSLABEL = 'native-pygments'
 let $GTAGSCONF = expand('~/.gtags.conf')
+let g:Lf_Gtagsconf = expand('~/.gtags.conf')
 
 let g:gutentags_define_advanced_commands = 1
 "搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归
@@ -322,7 +329,7 @@ endif
 "将自动生成的tags文件全部放入~/.cache/tags 目录中，避免污染工程目录
 let s:vim_tags = expand('~/.cache/tags')
 let g:Lf_CacheDirectory = s:vim_tags
-let g:gutentags_cache_dir = expand(g:Lf_CacheDirectory.'/.LfCache/gtags')
+let g:gutentags_cache_dir = expand(g:Lf_CacheDirectory.'/LeaderF/gtags')
 
 if !isdirectory(s:vim_tags)
 	silent! call mkdir(s:vim_tags, 'p')
@@ -352,6 +359,8 @@ let g:Lf_PreviewCode = 1
 let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font': "DejaVu Sans Mono for Powerline" }
 let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
 
+let g:Lf_DefaultMode = 'Regex'
+
 "noremap <C-u> :<C-U><C-R>=printf("Leaderf bufTag %s", "")<CR><CR>
 noremap <silent> <A-.> :<C-U><C-R>=printf("Leaderf gtags -d %s --top --auto-preview", expand("<cword>"))<CR><CR>
 noremap <silent> <A-,> :<C-U><C-R>=printf("Leaderf gtags -r %s --top --auto-preview", expand("<cword>"))<CR><CR>
@@ -363,10 +372,10 @@ noremap <silent> <A-p> :<C-U><C-R>=printf("Leaderf gtags --recall %s --top --aut
 ":lua print(vim.fn.printf("Leaderf gtags -s %s --top --auto-preview", vim.fn.expand('<cword>')))
 
 "查找当前光标所在单词,C-r打开预览,C-j/k预览翻页,C-e|C-o分屏
-noremap <silent> <leader>jh :<C-U><C-R>=printf("Leaderf mru %s --stayOpen", "")<CR><CR>
-noremap <silent> <leader>jl :<C-U><C-R>=printf("Leaderf line %s --no-sort --stayOpen", "")<CR><CR>
+"noremap <silent> <leader>jh :<C-U><C-R>=printf("Leaderf mru %s --stayOpen", "")<CR><CR>
+"noremap <silent> <leader>jl :<C-U><C-R>=printf("Leaderf line %s --no-sort --stayOpen", "")<CR><CR>
 
-noremap ? :<C-U><C-R>=printf("Leaderf rg --current-buffer -F -e %s --no-sort --stayOpen", expand("<cword>"))<CR><CR> 
+noremap <silent> <A-/> :<C-U><C-R>=printf("Leaderf rg --current-buffer -F -e %s --no-sort --no-auto-preview --preview-position cursor", expand("<cword>"))<CR><CR>
 "vmap <silent> fa :<C-U><C-R>=printf("Leaderf rg -F -e %s --no-sort --stayOpen", leaderf#Rg#visual())<CR><CR>
 "vmap <silent> fr :<C-U><C-R>=printf("Leaderf rg -F -w -e %s --no-sort --stayOpen", leaderf#Rg#visual())<CR><CR>
 "noremap <silent> fa :<C-U><C-R>=printf("Leaderf rg -F -e %s --no-sort --stayOpen", expand("<cword>"))<CR><CR>
@@ -381,7 +390,10 @@ let g:Lf_CommandMap = {
 			\'<C-UP>': ['<C-K>'],
 			\'<C-DOWN>': ['<C-J>'],
 			\'<C-X>': ['<C-O>'],
-			\'<C-]>': ['<C-E>']
+			\'<C-]>': ['<C-E>'],
+			\'<Home>': ['<C-A>'],
+			\'<Right>': ['<C-F>'],
+			\'<Left>': ['<C-B>'],
 			\}
 
 "let g:Lf_ShortcutF = '<leader>lf'
@@ -396,6 +408,53 @@ noremap <LEADER>ra :Lf<CR>
 let g:floaterm_width = 0.9
 let g:floaterm_height = 0.9
 
+"vim-airline插件
+" 获取当前函数名
+function! GetCurrentFunction()
+	let lnum = line(".")
+	let col = col(".")
+
+	" 初始化行号变量
+	let func_start_line = 0
+	let func_end_line = 0
+
+	" 向上搜索符合函数定义格式的行
+	if search("^[^ \t#/]\\{2}.*[^:][)\\{].*\s*$", 'bW')
+		let func_start_line = line(".")
+	endif
+	call search("\\%" . lnum . "l" . "\\%" . col . "c")
+
+	" 向上搜索以 } 为首字符的行
+	if search('^}', 'bW')
+		let func_end_line = line(".")
+	endif
+	call search("\\%" . lnum . "l" . "\\%" . col . "c")
+
+	" 比较两个行号来确定光标是否在函数内
+	if func_start_line > func_end_line
+		" 获取找到的函数定义行的内容
+		let line_content = getline(func_start_line)
+		" 找到 ) 或 { 出现的位置
+		let end_pos = match(line_content, "[)\\{]")
+		" 截取从行开始到 ) 或 { 的部分，获取函数名
+		if end_pos != -1
+			let line_content = line_content[ : end_pos]
+		endif
+		" 返回函数名
+		return line_content
+	else
+		" 返回 'none'，因为光标不在函数内
+		return 'none'
+	endif
+endfunction
+
+let g:airline_theme='base16'
+let g:airline_powerline_fonts = 1
+let g:airline_section_a = '%t'
+let g:airline_section_b = '%{GetCurrentFunction()}'
+let g:airline_section_c = ''
+let g:airline_section_error= ''
+let g:airline_section_warning = ''
 
 "加载lua配置文件
 lua require('FZH_lua')
