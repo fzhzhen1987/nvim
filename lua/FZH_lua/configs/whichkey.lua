@@ -91,21 +91,25 @@ local n_opts = {
 local n_mappings = {
 	--telescope Lsp 和 Leaderf
 	["<Space>j"] = { name = "Lsp 操作" },
-	["<Space>jd"] = {"<cmd>lua require('telescope.builtin').lsp_definitions(require('telescope.themes').get_ivy())<cr>", "Lsp 函数定义"},
-	["<Space>jD"] = {"<cmd>lua vim.lsp.buf.type_definition()<CR>", "Lsp 函数声明"},
+	["<Space>jj"] = {"<cmd>lua require('telescope.builtin').lsp_definitions(require('telescope.themes').get_ivy())<cr>", "Lsp 函数定义"},
+	["<Space>jd"] = {"<cmd>lua vim.lsp.buf.type_definition()<CR>", "Lsp 函数声明"},
 	["<Space>jr"] = {"<cmd>lua require('telescope.builtin').lsp_references(require('telescope.themes').get_ivy())<cr>", "Lsp 函数引用"},
 	["<Space>jt"] = {"<cmd>lua require('telescope.builtin').lsp_type_definitions(require('telescope.themes').get_ivy())<cr>", "Lsp type定义"},
 	["<Space>js"] = {"<cmd>execute printf('Leaderf gtags -s %s --top --auto-preview', expand('<cword>'))<cr>", "Leaderf symbol查询"},
+	["<Space>jc"] = {"<cmd>execute printf('Leaderf mru %s --stayOpen --preview-position cursor --no-auto-preview', expand(''))<cr>", "Leaderf 最近文件"},
+	["<Space>jl"] = {"<cmd>execute printf('Leaderf line %s --no-sort --stayOpen --preview-position cursor --no-auto-preview', expand(''))<cr>", "Leaderf 逐行"},
 	["<Space>jo"] = {"<cmd>lua require('telescope.builtin').diagnostics(require('telescope.themes').get_ivy())<cr>", "Lsp 错误提示"},
 	["<Space>ja"] = {"<cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols(require('telescope.themes').get_ivy())<cr>", "Lsp Symbols全局"},
 	["<Space>jf"] = {"<cmd>lua require('telescope.builtin').lsp_document_symbols(require('telescope.themes').get_ivy())<cr>", "Lsp Symbols 本文件"},
-	["<Space>jh"] = {"<cmd>lua require('telescope.builtin').help_tags()<cr>", "nvim 帮助"},
+	["<Space>jz"] = {"<cmd>lua require('telescope.builtin').help_tags()<cr>", "nvim 帮助"},
 
 	["<Space>jn"] = {"<cmd>lua vim.lsp.buf.rename()<CR>", "Lsp rename 变量"},
 	["<Space>jp"] = {"<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "Lsp 路径显示"},
 
 	["<Space>g"] = { name = "telescope 查找内容和git" },
 	["<Space>gg"] = {"<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args(require('telescope.themes').get_ivy())<cr>", "查找内容"},
+	["<Space>gc"] = {"<cmd>lua require('telescope-live-grep-args.shortcuts').grep_word_under_cursor()<cr>", "当前光标查找内容:-g !*.c"},
+
 	["<Space>gp"] = {"<cmd>GitGutterPrevHunk<CR>", "git 上个修改块"},
 	["<Space>gn"] = {"<cmd>GitGutterNextHunk<CR>", "git 下个修改块"},
 	["<Space>gh"] = {"<cmd>GitGutterLineHighlightsToggle<CR>", "git 高亮修改"},
@@ -143,10 +147,10 @@ local leap_opts = {
 }
 
 local leap_mappings = {
-	--代码注释
-	["s"] = {"<Plug>(leap-backward-to)", "Leap 向前查找"},
-	["<Space><Space>"] = {"<Plug>(leap-forward-to)", "Leap 向后查找,s向前查找"},
-	["<Space>s"] = {"<Plug>(leap-cross-window)", "Leap 全窗口跳转"},
+	--光标移动
+	["F"] = {"<Plug>(leap-backward-to)", "Leap 向前查找"},
+	["f"] = {"<Plug>(leap-forward-to)", "Leap 向后查找,s向前查找"},
+	["<Space><Space>"] = {"<Plug>(leap-cross-window)", "Leap 全窗口跳转"},
 }
 
 which_key.setup(setup)
