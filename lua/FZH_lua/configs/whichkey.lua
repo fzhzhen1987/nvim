@@ -14,7 +14,7 @@ local G = require('FZH_lua.G')
 
 local setup = {
 	plugins = {
-		marks = ture, -- shows a list of your marks on ' and `
+		marks = true, -- shows a list of your marks on ' and `
 		registers = true, -- shows your registers on " in NORMAL or <C-r> in INSERT mode
 		spelling = {
 			enabled = false, -- enabling this will show WhichKey when pressing z= to select spelling suggestions
@@ -68,15 +68,7 @@ local setup = {
 	hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua", "^:", "^ " }, -- hide mapping boilerplate
 	show_help = true,
 	show_keys = true,
-	triggers = "auto", -- automatically setup triggers
-	-- triggers = {"<leader>"} -- or specify a list manually
-	triggers_blacklist = {
-		-- list of mode / prefixes that should never be hooked by WhichKey
-		-- this is mostly relevant for key maps that start with a native binding
-		-- most people should not need to change this
-		i = {  },
-		v = {  },
-	},
+	triggers = { "<auto>" }, -- automatically setup triggers
 }
 
 local n_opts = {
@@ -89,23 +81,18 @@ local n_opts = {
 }
 
 local n_mappings = {
-	--telescope Lsp 和 Leaderf
+	-- Leaderf 特有功能（lsp_base.lua 中没有的）
 	["<Space>j"] = { name = "Lsp 操作" },
-	["<Space>jd"] = {"<cmd>lua require('telescope.builtin').lsp_definitions(require('telescope.themes').get_ivy())<cr>", "Lsp 函数定义"},
-	["<Space>jD"] = {"<cmd>lua vim.lsp.buf.type_definition()<CR>", "Lsp 函数声明"},
-	["<Space>jr"] = {"<cmd>lua require('telescope.builtin').lsp_references(require('telescope.themes').get_ivy())<cr>", "Lsp 函数引用"},
-	["<Space>jt"] = {"<cmd>lua require('telescope.builtin').lsp_type_definitions(require('telescope.themes').get_ivy())<cr>", "Lsp type定义"},
 	["<Space>js"] = {"<cmd>execute printf('Leaderf gtags -s %s --top --auto-preview', expand('<cword>'))<cr>", "Leaderf symbol查询"},
-	["<Space>jo"] = {"<cmd>lua require('telescope.builtin').diagnostics(require('telescope.themes').get_ivy())<cr>", "Lsp 错误提示"},
-	["<Space>ja"] = {"<cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols(require('telescope.themes').get_ivy())<cr>", "Lsp Symbols全局"},
-	["<Space>jf"] = {"<cmd>lua require('telescope.builtin').lsp_document_symbols(require('telescope.themes').get_ivy())<cr>", "Lsp Symbols 本文件"},
-	["<Space>jh"] = {"<cmd>lua require('telescope.builtin').help_tags()<cr>", "nvim 帮助"},
-
-	["<Space>jn"] = {"<cmd>lua vim.lsp.buf.rename()<CR>", "Lsp rename 变量"},
+	["<Space>jc"] = {"<cmd>execute printf('Leaderf mru %s --stayOpen --preview-position cursor --no-auto-preview', expand(''))<cr>", "Leaderf 最近文件"},
+	["<Space>jl"] = {"<cmd>execute printf('Leaderf line %s --no-sort --stayOpen --preview-position cursor --no-auto-preview', expand(''))<cr>", "Leaderf 逐行"},
+	["<Space>jz"] = {"<cmd>lua require('telescope.builtin').help_tags()<cr>", "nvim 帮助"},
 	["<Space>jp"] = {"<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>", "Lsp 路径显示"},
 
+	-- telescope 查找和 git
 	["<Space>g"] = { name = "telescope 查找内容和git" },
-	["<Space>gg"] = {"<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args(require('telescope.themes').get_ivy())<cr>", "查找内容"},
+	["<Space>gg"] = {"<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args()<cr>", "查找内容"},
+	["<Space>gc"] = {"<cmd>lua require('telescope-live-grep-args.shortcuts').grep_word_under_cursor()<cr>", "当前光标查找内容:-g !*.c"},
 	["<Space>gp"] = {"<cmd>GitGutterPrevHunk<CR>", "git 上个修改块"},
 	["<Space>gn"] = {"<cmd>GitGutterNextHunk<CR>", "git 下个修改块"},
 	["<Space>gh"] = {"<cmd>GitGutterLineHighlightsToggle<CR>", "git 高亮修改"},
@@ -113,8 +100,7 @@ local n_mappings = {
 	--代码注释
 	["<Space>c"] = {"<Plug>kommentary_line_default", "代码注释"},
 
-	--telescope
-	["<C-u>"] = {"<cmd>lua require('telescope.builtin').lsp_document_symbols(require('telescope.themes').get_ivy())<cr>", "Find Document Symbols"},
+	-- 其他功能
 	["h"] = {"<cmd>GitGutterPreviewHunk<CR>", "git 修改块显示"},
 	["<C-r>"] = {"<cmd>lua require('undotree').toggle()<cr>", "undotree"},
 }
@@ -143,10 +129,10 @@ local leap_opts = {
 }
 
 local leap_mappings = {
-	--代码注释
-	["s"] = {"<Plug>(leap-backward-to)", "Leap 向前查找"},
-	["<Space><Space>"] = {"<Plug>(leap-forward-to)", "Leap 向后查找,s向前查找"},
-	["<Space>s"] = {"<Plug>(leap-cross-window)", "Leap 全窗口跳转"},
+	--光标移动
+	["F"] = {"<Plug>(leap-backward-to)", "Leap 向前查找"},
+	["f"] = {"<Plug>(leap-forward-to)", "Leap 向后查找,s向前查找"},
+	["<Space><Space>"] = {"<Plug>(leap-cross-window)", "Leap 全窗口跳转"},
 }
 
 which_key.setup(setup)
