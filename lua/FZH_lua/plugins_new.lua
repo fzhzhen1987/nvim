@@ -85,14 +85,13 @@ return packer.startup(function(use)
 	use {"yianwillis/vimcdoc", event = 'VimEnter'}
 
 	-- 上下状态栏和buffer栏
-	use {"glepnir/galaxyline.nvim", branch = "main"}
 	use {"akinsho/bufferline.nvim", tag = "v3.*"}
 
 	-- 代码分析时预览
 	use "kevinhwang91/nvim-bqf"
 
 	-- 文件浏览器
-	use {"nvim-tree/nvim-tree.lua", tag = "nightly"}
+	use "nvim-tree/nvim-tree.lua"
 
 	use "folke/which-key.nvim"
 
@@ -107,7 +106,7 @@ return packer.startup(function(use)
 	use "hrsh7th/cmp-path"
 	use "hrsh7th/cmp-nvim-lua"
 	use "saadparwaiz1/cmp_luasnip" -- snippet completions
-	use{"L3MON4D3/LuaSnip", tag = "v<CurrentMajor>.*", run = "make install_jsregexp"}
+	use{"L3MON4D3/LuaSnip", tag = "v2.*", run = "make install_jsregexp"}
 	use "onsails/lspkind-nvim"
 
 
@@ -118,7 +117,7 @@ return packer.startup(function(use)
 
 
 	-- 语法高亮
-	use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
+	use {'nvim-treesitter/nvim-treesitter', tag = 'v0.9.0', run = ':TSUpdate', requires = { "p00f/nvim-ts-rainbow" }}
 
 	-- 代码注释
 	use "b3nj5m1n/kommentary"
