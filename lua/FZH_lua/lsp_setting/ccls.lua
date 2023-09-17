@@ -1,3 +1,6 @@
+local home = os.getenv("HOME") or ""
+local cache_dir = home .. "/.cache/tags/ccls"
+
 require('lspconfig').ccls.setup {
 	init_options = {
 		index = {
@@ -5,6 +8,9 @@ require('lspconfig').ccls.setup {
 		};
 		clang = {
 			excludeArgs = { "-frounding-math"};
+		};
+		cache = {
+			directory = cache_dir;
 		};
 		completion = {
 			placeholder = false;
