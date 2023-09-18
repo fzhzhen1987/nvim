@@ -53,7 +53,8 @@ if not status_ok then
 end
 
 local actions = require "telescope.actions"
---local bug_actions = require "telescope-live-grep-args.actions"
+-- 添加 live_grep_args actions
+local lga_actions = require "telescope-live-grep-args.actions"
 
 -- disable preview binaries
 local previewers = require("telescope.previewers")
@@ -83,16 +84,7 @@ telescope.setup {
 
 		prompt_prefix = " ",
 		selection_caret = " ",
-		path_display = {
-			shorten = {
-				-- e.g. for a path like
-				--   `alpha/beta/gamma/delta.txt`
-				-- setting `path_display.shorten = { len = 1, exclude = {1, -1} }`
-				-- will give a path like:
-				--   `alpha/b/g/delta.txt`
-				len = 3, exclude = { 1, -1 }
-			},
-		},
+		path_display = { "smart" },
 
 		mappings = {
 			i = {
@@ -119,6 +111,11 @@ telescope.setup {
 
 				["<C-l>"] = actions.complete_tag,
 				["<C-_>"] = actions.which_key, -- keys from pressing <C-/>
+				["<C-f>"] = function(rightmove)
+					local pos = vim.fn.getcurpos()
+					pos[3] = pos[3] + 1
+					vim.fn.setpos(".", pos)
+				end,
 			},
 
 			n = {
@@ -154,6 +151,23 @@ telescope.setup {
 			-- find_command = { "find", "-type", "f" },
 			find_command = { "fd", "-H" , "-I"},  -- "-H" search hidden files, "-I" do not respect to gitignore
 		},
+		lsp_definitions = { 
+			jump_type = "never",
+			theme = "ivy"
+		},
+		lsp_references = { 
+			jump_type = "never",
+			include_declaration = false,
+			theme = "ivy"
+		},
+		lsp_type_definitions = { 
+			jump_type = "never",
+			theme = "ivy"
+		},
+		lsp_implementations = { 
+			jump_type = "never",
+			theme = "ivy"
+		},
 
 		-- Default configuration for builtin pickers goes here:
 		-- picker_name = {
@@ -168,6 +182,46 @@ telescope.setup {
 		-- extension_name = {
 		--   extension_config_key = value,
 		-- }
+
+		-- 添加 live_grep_args 配置
+		live_grep_args = {
+			auto_quoting = true, -- 启用自动引号
+			-- 定义参数如何传递给 rg
+			mappings = { -- 扩展的映射
+				i = {
+					["<C-u>"] = lga_actions.quote_prompt(),  -- 使用 Ctrl+2 添加引号
+					["<C-g>"] = function(prompt_bufnr)
+						-- 只添加 -g，不加引号
+						local current_picker = require('telescope.actions.state').get_current_picker(prompt_bufnr)
+						local prompt = current_picker:_get_prompt()
+						current_picker:set_prompt(prompt .. " -g ")
+					end,
+					["<C-i>"] = function(prompt_bufnr)
+						-- 只添加 --iglob，不加引号
+						local current_picker = require('telescope.actions.state').get_current_picker(prompt_bufnr)
+						local prompt = current_picker:_get_prompt()
+						current_picker:set_prompt(prompt .. " --iglob ")
+					end,
+				},
+			},
+			-- ... 也可以传递额外的选项给 `live_grep`，例如:
+			-- "hidden" 会传递 `--hidden` 参数给 "rg"
+			theme = "ivy", -- 使用 ivy 主题
+			
+			-- 设置默认的 ripgrep 参数
+			-- 如果你总是想看到行号，可以设置:
+			-- vimgrep_arguments = {
+			--   "rg",
+			--   "--color=never",
+			--   "--no-heading",
+			--   "--with-filename",
+			--   "--line-number",
+			--   "--column",
+			--   "--smart-case",
+			--   "--hidden", -- 搜索隐藏文件
+			--   "--glob=!.git/*", -- 但排除 .git
+			-- },
+		},
 
 		-- fzf syntax
 		-- Token	Match type	Description
@@ -197,3 +251,19 @@ telescope.load_extension("live_grep_args")
 -- telescope.load_extension('vim_bookmarks')
 
 -- load project extension. see project.lua file
+
+-- 创建一些有用的全局函数来简化使用
+_G.grep_in_files = function(pattern)
+	-- 在特定文件类型中搜索
+	require('telescope').extensions.live_grep_args.live_grep_args({
+		default_text = '"' .. vim.fn.expand("<cword>") .. '" -g ' .. (pattern or "*.{c,h}")
+	})
+end
+
+_G.grep_exclude = function(exclude_pattern)
+	-- 排除特定文件搜索
+	require('telescope').extensions.live_grep_args.live_grep_args({
+		default_text = '"' .. vim.fn.expand("<cword>") .. '" -g !' .. (exclude_pattern or "*/test/*")
+	})
+end
+
