@@ -119,6 +119,11 @@ telescope.setup {
 
 				["<C-l>"] = actions.complete_tag,
 				["<C-_>"] = actions.which_key, -- keys from pressing <C-/>
+				["<C-f>"] = function(rightmove)
+					local pos = vim.fn.getcurpos()
+					pos[3] = pos[3] + 1
+					vim.fn.setpos(".", pos)
+				end,
 			},
 
 			n = {
