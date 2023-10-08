@@ -16,9 +16,8 @@ endif
 "自动匹配符号
 Plug 'jiangmiao/auto-pairs'
 
-"符号包裹组合插件
+"符号包裹插件
 Plug 'tpope/vim-surround'
-Plug 'gcmt/wildfire.vim'
 
 "undotree
 "Plug 'mbbill/undotree'
@@ -43,14 +42,8 @@ Plug 'kevinhwang91/rnvimr', {'on': 'RnvimrToggle'}
 "文件中显示git修改
 Plug 'airblade/vim-gitgutter'
 
-"lsp中语法高亮
-Plug 'jackguo380/vim-lsp-cxx-highlight'
-
 "tab缩进
 Plug 'nathanaelkane/vim-indent-guides'
-
-"彩虹符号配对
-Plug 'kien/rainbow_parentheses.vim'
 
 "多光标编辑
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
@@ -69,6 +62,8 @@ Plug 'kristijanhusak/vim-hybrid-material'
 Plug 'hardcoreplayers/oceanic-material'
 Plug 'mhartington/oceanic-next'
 
+"LSP C 语义高亮（支持 ifdef 变灰）
+Plug 'jackguo380/vim-lsp-cxx-highlight'
 
 "代码分析
 Plug 'ludovicchabant/vim-gutentags'
@@ -76,11 +71,7 @@ Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 
 "copilot
 " Plug 'github/copilot.vim'
-Plug 'Exafunction/codeium.vim', { 'branch': 'main' }
-
-"statusline 状态栏设置
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+" Plug 'Exafunction/codeium.vim', { 'branch': 'main' }
 
 call plug#end()
 
@@ -97,9 +88,7 @@ let g:AutoPairsFlyMode = 0
 let g:AutoPairsMultilineClose=0
 
 
-"tpope/vim-surround和gcmt/wildfire.vim"
-let g:wildfire_objects = [ "iw", "i'", 'i"', "i)", "i]", "i}", "ip", "it", "i>"]
-
+"tpope/vim-surround
 let g:surround_no_mappings = 1
 nmap js <Plug>Dsurround
 nmap cs <Plug>Csurround
@@ -216,11 +205,13 @@ let g:gitgutter_sign_modified = '░'
 let g:gitgutter_sign_removed = '▏'
 let g:gitgutter_sign_removed_first_line = '▔'
 let g:gitgutter_sign_modified_removed = '▒'
-nnoremap h :GitGutterPreviewHunk<CR>
 
 
 "jackguo380/vim-lsp-cxx-highlight
-let g:lsp_cxx_hl_use_text_props = 0
+let g:lsp_cxx_hl_use_text_props = 1
+
+" 语法高亮优先级（确保 LSP 高亮覆盖默认语法高亮）
+let g:lsp_cxx_hl_syntax_priority = 100
 
 
 "nathanaelkane/vim-indent-guides设置
@@ -235,32 +226,6 @@ let g:indent_guides_color_change_percent = 5
 let g:indent_guide_start_level = 2
 let g:indent_guides_guide_size = 1
 let g:indent_guides_space_guides = 0
-
-
-"kien/rainbow_parentheses.vim
-let g:rbpt_colorpairs = [
-			\ ['brown',       'RoyalBlue3'],
-			\ ['Darkblue',    'SeaGreen3'],
-			\ ['darkgray',    'DarkOrchid3'],
-			\ ['darkgreen',   'firebrick3'],
-			\ ['darkcyan',    'RoyalBlue3'],
-			\ ['darkred',     'SeaGreen3'],
-			\ ['darkmagenta', 'DarkOrchid3'],
-			\ ['brown',       'firebrick3'],
-			\ ['gray',        'RoyalBlue3'],
-			\ ['black',       'SeaGreen3'],
-			\ ['darkmagenta', 'DarkOrchid3'],
-			\ ['Darkblue',    'firebrick3'],
-			\ ['darkgreen',   'RoyalBlue3'],
-			\ ['darkcyan',    'SeaGreen3'],
-			\ ['darkred',     'DarkOrchid3'],
-			\ ['red',         'firebrick3'],
-			\ ]
-let g:rbpt_max = 16
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
 
 
 "mg979/vim-visual-multi
@@ -404,57 +369,10 @@ let g:Lf_ShortcutB = '<nop>'
 " noremap <LEADER>ra :RnvimrToggle<CR>
 
 "lf插件
+let g:lf_map_keys = 0
 noremap <LEADER>ra :Lf<CR>
 let g:floaterm_width = 0.9
 let g:floaterm_height = 0.9
-
-"vim-airline插件
-" 获取当前函数名
-function! GetCurrentFunction()
-	let lnum = line(".")
-	let col = col(".")
-
-	" 初始化行号变量
-	let func_start_line = 0
-	let func_end_line = 0
-
-	" 向上搜索符合函数定义格式的行
-	if search("^[^ \t#/]\\{2}.*[^:][)\\{].*\s*$", 'bW')
-		let func_start_line = line(".")
-	endif
-	call search("\\%" . lnum . "l" . "\\%" . col . "c")
-
-	" 向上搜索以 } 为首字符的行
-	if search('^}', 'bW')
-		let func_end_line = line(".")
-	endif
-	call search("\\%" . lnum . "l" . "\\%" . col . "c")
-
-	" 比较两个行号来确定光标是否在函数内
-	if func_start_line > func_end_line
-		" 获取找到的函数定义行的内容
-		let line_content = getline(func_start_line)
-		" 找到 ) 或 { 出现的位置
-		let end_pos = match(line_content, "[)\\{]")
-		" 截取从行开始到 ) 或 { 的部分，获取函数名
-		if end_pos != -1
-			let line_content = line_content[ : end_pos]
-		endif
-		" 返回函数名
-		return line_content
-	else
-		" 返回 'none'，因为光标不在函数内
-		return 'none'
-	endif
-endfunction
-
-let g:airline_theme='base16'
-let g:airline_powerline_fonts = 1
-let g:airline_section_a = '%t'
-let g:airline_section_b = '%{GetCurrentFunction()}'
-let g:airline_section_c = ''
-let g:airline_section_error= ''
-let g:airline_section_warning = ''
 
 "加载lua配置文件
 lua require('FZH_lua')
