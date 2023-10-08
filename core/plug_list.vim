@@ -16,9 +16,8 @@ endif
 "自动匹配符号
 Plug 'jiangmiao/auto-pairs'
 
-"符号包裹组合插件
+"符号包裹插件
 Plug 'tpope/vim-surround'
-Plug 'gcmt/wildfire.vim'
 
 "undotree
 "Plug 'mbbill/undotree'
@@ -43,14 +42,8 @@ Plug 'kevinhwang91/rnvimr', {'on': 'RnvimrToggle'}
 "文件中显示git修改
 Plug 'airblade/vim-gitgutter'
 
-"lsp中语法高亮
-Plug 'jackguo380/vim-lsp-cxx-highlight'
-
 "tab缩进
 Plug 'nathanaelkane/vim-indent-guides'
-
-"彩虹符号配对
-Plug 'kien/rainbow_parentheses.vim'
 
 "多光标编辑
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
@@ -69,6 +62,8 @@ Plug 'kristijanhusak/vim-hybrid-material'
 Plug 'hardcoreplayers/oceanic-material'
 Plug 'mhartington/oceanic-next'
 
+"LSP C 语义高亮（支持 ifdef 变灰）
+Plug 'jackguo380/vim-lsp-cxx-highlight'
 
 "代码分析
 Plug 'ludovicchabant/vim-gutentags'
@@ -76,7 +71,7 @@ Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 
 "copilot
 " Plug 'github/copilot.vim'
-Plug 'Exafunction/codeium.vim', { 'branch': 'main' }
+" Plug 'Exafunction/codeium.vim', { 'branch': 'main' }
 
 "statusline 状态栏设置
 Plug 'vim-airline/vim-airline'
@@ -97,9 +92,7 @@ let g:AutoPairsFlyMode = 0
 let g:AutoPairsMultilineClose=0
 
 
-"tpope/vim-surround和gcmt/wildfire.vim"
-let g:wildfire_objects = [ "iw", "i'", 'i"', "i)", "i]", "i}", "ip", "it", "i>"]
-
+"tpope/vim-surround
 let g:surround_no_mappings = 1
 nmap js <Plug>Dsurround
 nmap cs <Plug>Csurround
@@ -220,7 +213,10 @@ nnoremap h :GitGutterPreviewHunk<CR>
 
 
 "jackguo380/vim-lsp-cxx-highlight
-let g:lsp_cxx_hl_use_text_props = 0
+let g:lsp_cxx_hl_use_text_props = 1
+
+" 语法高亮优先级（确保 LSP 高亮覆盖默认语法高亮）
+let g:lsp_cxx_hl_syntax_priority = 100
 
 
 "nathanaelkane/vim-indent-guides设置
@@ -235,32 +231,6 @@ let g:indent_guides_color_change_percent = 5
 let g:indent_guide_start_level = 2
 let g:indent_guides_guide_size = 1
 let g:indent_guides_space_guides = 0
-
-
-"kien/rainbow_parentheses.vim
-let g:rbpt_colorpairs = [
-			\ ['brown',       'RoyalBlue3'],
-			\ ['Darkblue',    'SeaGreen3'],
-			\ ['darkgray',    'DarkOrchid3'],
-			\ ['darkgreen',   'firebrick3'],
-			\ ['darkcyan',    'RoyalBlue3'],
-			\ ['darkred',     'SeaGreen3'],
-			\ ['darkmagenta', 'DarkOrchid3'],
-			\ ['brown',       'firebrick3'],
-			\ ['gray',        'RoyalBlue3'],
-			\ ['black',       'SeaGreen3'],
-			\ ['darkmagenta', 'DarkOrchid3'],
-			\ ['Darkblue',    'firebrick3'],
-			\ ['darkgreen',   'RoyalBlue3'],
-			\ ['darkcyan',    'SeaGreen3'],
-			\ ['darkred',     'DarkOrchid3'],
-			\ ['red',         'firebrick3'],
-			\ ]
-let g:rbpt_max = 16
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
 
 
 "mg979/vim-visual-multi
@@ -404,6 +374,7 @@ let g:Lf_ShortcutB = '<nop>'
 " noremap <LEADER>ra :RnvimrToggle<CR>
 
 "lf插件
+let g:lf_map_keys = 0
 noremap <LEADER>ra :Lf<CR>
 let g:floaterm_width = 0.9
 let g:floaterm_height = 0.9
