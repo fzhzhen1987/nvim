@@ -75,7 +75,8 @@ Plug 'ludovicchabant/vim-gutentags'
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
 
 "copilot
-Plug 'github/copilot.vim'
+" Plug 'github/copilot.vim'
+Plug 'Exafunction/codeium.vim', { 'branch': 'main' }
 
 call plug#end()
 
@@ -103,8 +104,13 @@ nmap ys <Plug>Ysurround
 
 
 "github/copilot.vim"
-let g:copilot_no_tab_map = v:true
-imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
+" let g:copilot_no_tab_map = v:true
+" imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
+let g:codeium_disable_bindings = 1
+imap <script><silent><nowait><expr> <C-j> codeium#Accept()
+imap <A-j>   <Cmd>call codeium#CycleCompletions(1)<CR>
+imap <A-k>   <Cmd>call codeium#CycleCompletions(-1)<CR>
+imap <C-g>   <Cmd>call codeium#Clear()<CR>
 
 "Undotree
 " noremap <C-r> :UndotreeToggle<CR>
