@@ -1,0 +1,245 @@
+-- ~/.config/nvim/lua/FZH_lua/lsp_setting/lsp_base.lua
+-- 从原来的 lspconfig.lua 移过来的基础配置
+
+local M = {}
+
+M.setup = function()
+	-- 设置诊断图标
+	local signs = {
+		{ name = "DiagnosticSignError", text = "" },
+		{ name = "DiagnosticSignWarn", text = "" },
+		{ name = "DiagnosticSignHint", text = "" },
+		{ name = "DiagnosticSignInfo", text = "" },
+	}
+
+	for _, sign in ipairs(signs) do
+		vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = "" })
+	end
+
+	-- 配置诊断显示
+	vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+		vim.lsp.diagnostic.on_publish_diagnostics,
+		{
+			signs = { active = signs },
+			underline = true,
+			update_in_insert = true,
+			severity_sort = true,
+			float = {
+				focusable = false,
+				style = "minimal",
+				border = "rounded",
+				source = "always",
+				header = "",
+				prefix = "",
+			},
+			virtual_text = {
+				prefix = "",
+			},
+		}
+	)
+
+	-- 配置悬停和签名帮助
+	vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+		border = "rounded",
+	})
+	vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+		border = "rounded",
+	})
+
+	-- 自定义 LSP 处理器，强制使用 telescope 或 quickfix 预览
+	local function make_handler_with_preview(lsp_method)
+		return function(_, result, ctx, config)
+			if not result or vim.tbl_isempty(result) then
+				vim.notify("No results found", vim.log.levels.INFO)
+				return
+			end
+
+			local has_telescope, telescope_builtin = pcall(require, "telescope.builtin")
+			if has_telescope then
+				if lsp_method == "textDocument/definition" then
+					telescope_builtin.lsp_definitions({ jump_type = "never" })
+				elseif lsp_method == "textDocument/references" then
+					telescope_builtin.lsp_references({ jump_type = "never", include_declaration = false })
+				elseif lsp_method == "textDocument/implementation" then
+					telescope_builtin.lsp_implementations({ jump_type = "never" })
+				elseif lsp_method == "textDocument/typeDefinition" then
+					telescope_builtin.lsp_type_definitions({ jump_type = "never" })
+				elseif lsp_method == "textDocument/declaration" then
+					-- declaration 通常返回单个结果，但我们仍然可以用 telescope 预览
+					telescope_builtin.lsp_definitions({ 
+						jump_type = "never",
+						prompt_title = "Declarations"
+					})
+				end
+			else
+				vim.lsp.handlers[lsp_method](_, result, ctx, config)
+				vim.cmd("copen")
+			end
+		end
+	end
+
+	vim.lsp.handlers["textDocument/definition"] = make_handler_with_preview("textDocument/definition")
+	vim.lsp.handlers["textDocument/references"] = make_handler_with_preview("textDocument/references")
+	vim.lsp.handlers["textDocument/implementation"] = make_handler_with_preview("textDocument/implementation")
+	vim.lsp.handlers["textDocument/typeDefinition"] = make_handler_with_preview("textDocument/typeDefinition")
+	vim.lsp.handlers["textDocument/declaration"] = make_handler_with_preview("textDocument/declaration")
+
+	-- 设置全局 on_attach 函数
+	_G.Itkey_on_attach = function(client, bufnr)
+		local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+		local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+		buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
+		local opts = { noremap = true, silent = true }
+		local has_telescope = pcall(require, "telescope.builtin")
+
+		if has_telescope then
+			-- 基础 LSP 功能
+			buf_set_keymap("n", "gd", '<cmd>lua require("telescope.builtin").lsp_definitions({ jump_type = "never" })<CR>', opts)
+			buf_set_keymap("n", "gD", '<cmd>lua require("telescope.builtin").lsp_definitions({ jump_type = "never", prompt_title = "Declaration" })<CR>', opts)
+			buf_set_keymap("n", "gi", '<cmd>lua require("telescope.builtin").lsp_implementations({ jump_type = "never" })<CR>', opts)
+			buf_set_keymap("n", "gt", '<cmd>lua require("telescope.builtin").lsp_type_definitions({ jump_type = "never" })<CR>', opts)
+			
+			-- 优化后的键位
+			buf_set_keymap("n", "gr", '<cmd>lua require("telescope.builtin").lsp_incoming_calls()<CR>', opts)  -- incoming calls (更常用)
+			-- buf_set_keymap("n", "gr", '<cmd>lua local ok, err = pcall(require("telescope.builtin").lsp_incoming_calls); if not ok then print("Error:", err) else print("Called successfully") end<CR>', opts)
+			buf_set_keymap("n", "gR", '<cmd>lua require("telescope.builtin").lsp_references({ jump_type = "never", include_declaration = false })<CR>', opts)  -- references
+			buf_set_keymap("n", "go", '<cmd>lua require("telescope.builtin").lsp_outgoing_calls()<CR>', opts)  -- outgoing calls
+			buf_set_keymap("n", "gs", '<cmd>lua require("telescope.builtin").lsp_document_symbols()<CR>', opts)  -- document symbols
+			buf_set_keymap("n", "gS", '<cmd>lua require("telescope.builtin").lsp_dynamic_workspace_symbols()<CR>', opts)  -- workspace symbols
+			buf_set_keymap("n", "gh", "<cmd>lua vim.diagnostic.setloclist()<CR>", opts)
+			buf_set_keymap("n", "gH", '<cmd>lua require("telescope.builtin").diagnostics({ bufnr = nil, previewer = false, layout_strategy = "vertical", layout_config = { width = 0.9 } })<CR>', opts)  -- all workspace diagnostics
+		else
+			vim.notify("Telescope is required for LSP features", vim.log.levels.ERROR)
+			return
+		end
+
+		buf_set_keymap("n", "J", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+		buf_set_keymap("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>", opts)
+		buf_set_keymap("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+		buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.format({ async = true })<CR>", opts)
+
+		if client.server_capabilities.documentHighlightProvider then
+			vim.api.nvim_create_augroup("lsp_document_highlight", { clear = false })
+			vim.api.nvim_clear_autocmds({ buffer = bufnr, group = "lsp_document_highlight" })
+			vim.api.nvim_create_autocmd("CursorHold", {
+				callback = vim.lsp.buf.document_highlight,
+				buffer = bufnr,
+				group = "lsp_document_highlight",
+				desc = "Document Highlight",
+			})
+			vim.api.nvim_create_autocmd("CursorMoved", {
+				callback = vim.lsp.buf.clear_references,
+				buffer = bufnr,
+				group = "lsp_document_highlight",
+				desc = "Clear All the References",
+			})
+		end
+	end
+
+	local capabilities = vim.lsp.protocol.make_client_capabilities()
+	capabilities.textDocument.completion.completionItem.documentationFormat = { "markdown", "plaintext" }
+	capabilities.textDocument.completion.completionItem.snippetSupport = true
+	capabilities.textDocument.completion.completionItem.preselectSupport = true
+	capabilities.textDocument.completion.completionItem.insertReplaceSupport = true
+	capabilities.textDocument.completion.completionItem.labelDetailsSupport = true
+	capabilities.textDocument.completion.completionItem.deprecatedSupport = true
+	capabilities.textDocument.completion.completionItem.commitCharactersSupport = true
+	capabilities.textDocument.completion.completionItem.tagSupport = { valueSet = { 1 } }
+	capabilities.textDocument.completion.completionItem.resolveSupport = {
+		properties = {
+			"documentation",
+			"detail",
+			"additionalTextEdits",
+		},
+	}
+
+	local has_cmp_nvim_lsp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+	if has_cmp_nvim_lsp then
+		capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
+	end
+
+	_G.Itkey_capabilities = capabilities
+
+	vim.api.nvim_create_user_command("LspRestart", function(opts)
+		local clients = vim.lsp.get_active_clients()
+		local target_clients = {}
+
+		for _, client in ipairs(clients) do
+			if opts.args == "" or client.name == opts.args then
+				table.insert(target_clients, client)
+			end
+		end
+
+		for _, client in ipairs(target_clients) do
+			vim.lsp.stop_client(client.id)
+		end
+
+		vim.defer_fn(function()
+			vim.cmd("doautocmd FileType")
+		end, 100)
+
+		local msg = opts.args == "" and "Restarting all LSP clients..." or "Restarting " .. opts.args .. "..."
+		vim.notify(msg, vim.log.levels.INFO)
+	end, {
+		nargs = "?",
+		complete = function()
+			local clients = vim.lsp.get_active_clients()
+			local names = {}
+			for _, client in ipairs(clients) do
+				table.insert(names, client.name)
+			end
+			return names
+		end,
+		desc = "Restart LSP clients",
+	})
+
+	vim.api.nvim_create_user_command("LspInfo", function()
+		local clients = vim.lsp.get_active_clients()
+		if #clients == 0 then
+			print("No active LSP clients")
+			return
+		end
+
+		print("Active LSP clients:")
+		for _, client in ipairs(clients) do
+			local filetypes = table.concat(client.config.filetypes or {}, ", ")
+			print(string.format("  • %s (id: %d) - filetypes: %s", client.name, client.id, filetypes))
+		end
+	end, { desc = "Show active LSP clients" })
+
+	vim.api.nvim_create_user_command("LspLog", function()
+		local log_path = vim.lsp.get_log_path()
+		vim.cmd("edit " .. log_path)
+	end, { desc = "Open LSP log file" })
+
+	vim.api.nvim_create_user_command("LspCapabilities", function()
+		local clients = vim.lsp.get_active_clients()
+		if #clients == 0 then
+			print("No active LSP clients")
+			return
+		end
+
+		for _, client in ipairs(clients) do
+			print("=== " .. client.name .. " capabilities ===")
+			print(vim.inspect(client.server_capabilities))
+		end
+	end, { desc = "Show LSP server capabilities" })
+
+	vim.api.nvim_create_user_command("DiagnosticsToggle", function()
+		local current = vim.diagnostic.is_disabled()
+		if current then
+			vim.diagnostic.enable()
+			vim.notify("Diagnostics enabled", vim.log.levels.INFO)
+		else
+			vim.diagnostic.disable()
+			vim.notify("Diagnostics disabled", vim.log.levels.INFO)
+		end
+	end, { desc = "Toggle diagnostics" })
+
+	vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Show line diagnostics" })
+	vim.keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, { desc = "Add diagnostics to location list" })
+	vim.keymap.set("n", "<leader>dq", vim.diagnostic.setqflist, { desc = "Add diagnostics to quickfix list" })
+end
+
+return M

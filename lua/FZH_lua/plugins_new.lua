@@ -99,7 +99,10 @@ return packer.startup(function(use)
 	use "ggandor/leap.nvim"
 
 	-- 开发
-	use "neovim/nvim-lspconfig"
+	use {
+		"neovim/nvim-lspconfig",
+		tag = "v0.1.4"
+	}
 	use "hrsh7th/nvim-cmp"
 	use "hrsh7th/cmp-nvim-lsp"
 	use "hrsh7th/cmp-buffer"
