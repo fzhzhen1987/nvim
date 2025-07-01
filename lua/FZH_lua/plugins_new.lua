@@ -87,6 +87,12 @@ return packer.startup(function(use)
 	-- 上下状态栏和buffer栏
 	use {"akinsho/bufferline.nvim", tag = "v3.*"}
 
+	-- 状态栏
+	use {
+		'nvim-lualine/lualine.nvim',
+		requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+	}
+
 	-- 代码分析时预览
 	use "kevinhwang91/nvim-bqf"
 
@@ -99,7 +105,10 @@ return packer.startup(function(use)
 	use "ggandor/leap.nvim"
 
 	-- 开发
-	use "neovim/nvim-lspconfig"
+	use {
+		"neovim/nvim-lspconfig",
+		tag = "v0.1.4"
+	}
 	use "hrsh7th/nvim-cmp"
 	use "hrsh7th/cmp-nvim-lsp"
 	use "hrsh7th/cmp-buffer"

@@ -1,31 +1,66 @@
+-- ~/.config/nvim/lua/FZH_lua/lsp_setting/init.lua
+-- 整合后的 LSP 配置主文件
+
 local M = {}
 
--- local starts_with = require("user.utils").starts_with
-local ends_with = require("FZH_lua.utils").ends_with
-
 M.setup = function()
-	local config_dir = vim.fn.stdpath('config') .. '/lua/FZH_lua/lsp_setting'
-	-- plugins do not need to load, NOTE: no .lua suffix required
-	local unload_plugins = {
-		"init", -- we don't need to load init again
+	-- 1. 首先设置基础 LSP 配置（诊断图标、处理器等）
+	local base_ok, lsp_base = pcall(require, 'FZH_lua.lsp_setting.lsp_base')
+	if base_ok then
+		lsp_base.setup()
+	end
+
+	-- 2. 加载 lsp_automation（确保命令被注册）
+	local automation_ok, automation = pcall(require, 'FZH_lua.lsp_setting.lsp_automation')
+	if automation_ok and automation.setup then
+		automation.setup()
+	end
+
+	-- 3. 设置 clangd
+	local clangd_ok, clangd = pcall(require, 'FZH_lua.lsp_setting.clangd')
+	if clangd_ok and clangd.setup then
+		clangd.setup()
+	else
+		-- 如果没有 clangd.lua 文件，使用默认配置
+		local lspconfig_ok, lspconfig = pcall(require, 'lspconfig')
+		if lspconfig_ok and lspconfig.clangd then
+			lspconfig.clangd.setup({
+				on_attach = Itkey_on_attach,
+				capabilities = Itkey_capabilities,
+			})
+		end
+	end
+
+	-- 4. 设置其他语言服务器
+	local servers = {
+		-- 'pyright',  -- Python
+		-- 'tsserver', -- TypeScript
+		-- 添加其他需要的服务器
 	}
 
-	local helper_set = {}
-	for _, v in pairs(unload_plugins) do
-		helper_set[v] = true
-	end
-	for _, fname in pairs(vim.fn.readdir(config_dir)) do
-		if ends_with(fname, ".lua") then
-			local cut_suffix_fname = fname:sub(1, #fname - #'.lua')
-			if helper_set[cut_suffix_fname] == nil then
-				local file = "FZH_lua.lsp_setting." .. cut_suffix_fname
-				local status_ok, _ = pcall(require, file)
-				if not status_ok then
-					vim.notify('Failed loading ' .. fname, vim.log.levels.ERROR)
-				end
+	for _, server in ipairs(servers) do
+		local config_file = 'FZH_lua.lsp_setting.' .. server
+		local ok, server_config = pcall(require, config_file)
+		if ok and server_config.setup then
+			server_config.setup()
+		else
+			-- 如果没有特定配置，使用默认配置
+			local lspconfig = require('lspconfig')
+			if lspconfig[server] then
+				lspconfig[server].setup({
+					on_attach = Itkey_on_attach,
+					capabilities = Itkey_capabilities,
+				})
 			end
 		end
 	end
+
+	-- 5. 设置自动补全
+	local completion_ok, completion = pcall(require, 'FZH_lua.lsp_setting.completion')
+	if completion_ok then
+		completion.setup()
+	end
 end
 
-M.setup()
+return M
+
