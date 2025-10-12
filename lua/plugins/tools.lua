@@ -3,34 +3,6 @@
 
 return {
 	-- ========================================
-	-- 浮动终端窗口
-	-- 来源：plug_list.vim line 34 - voldikss/vim-floaterm
-	-- ========================================
-	{
-		"voldikss/vim-floaterm",
-		commit = "fd4bdd66eca56c6cc59f2119e4447496d8cde2ea",  -- 锁定版本
-		lazy = false,
-		init = function()
-			require("config.plugins").setup_floaterm()
-		end,
-	},
-
-	-- ========================================
-	-- lf 文件管理器集成
-	-- 来源：plug_list.vim line 33 - ptzz/lf.vim
-	-- 依赖：vim-floaterm
-	-- ========================================
-	{
-		"ptzz/lf.vim",
-		version = "v1.4",  -- 锁定版本
-		lazy = false,
-		dependencies = { "voldikss/vim-floaterm" },
-		init = function()
-			require("config.plugins").setup_lf()
-		end,
-	},
-
-	-- ========================================
 	-- tig 集成（Git 变更查看和交互）
 	-- 插件：iberianpig/tig-explorer.vim
 	-- 功能：在 tig 中按 e 直接在 nvim 中打开文件（非弹窗）
@@ -108,7 +80,7 @@ return {
 	-- ========================================
 	{
 		"nvim-telescope/telescope.nvim",
-		version = "0.1.0",  -- 锁定版本
+		version = "0.1.8",  -- 最新稳定版，包含更多 LSP 改进和 bug 修复
 		lazy = false,
 		dependencies = {
 			"nvim-lua/plenary.nvim",  -- 必需依赖
